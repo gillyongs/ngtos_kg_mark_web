@@ -1,0 +1,16 @@
+/* App.css */
+
+.tour-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tour-table th, .tour-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.tour-table th {
+  background-color: #f2f2f2;
+}

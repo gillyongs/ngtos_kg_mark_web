@@ -1,0 +1,232 @@
+/* NsrResult.css 
+
+.nsr-result-table {
+    border-collapse: collapse;
+    width: 90%;
+    background: #f5f5f5;
+  }
+*/
+.nsr-result-container {
+  text-align: center;
+
+}
+
+.nsr-result-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+  
+  .big-cell {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .small-cell {
+    border: 1px solid #ddd;
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
+    background: #f5f5f5;
+  }
+  
+  
+  .nsr-result-table th,
+  .nsr-result-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .nsr-result-table th {
+    background: #e6e6e6;
+  }
+  
+  .nsr-result-table tbody tr:nth-child(even) {
+    background: #f5f5f5;
+  }
+  
+  .nsr-result-table td.selected {
+    background: rgba(255, 192, 203, 0.5);
+  }
+  
+  .nsr-result-table td.total {
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 25px;
+  }
+
+  .total-row{
+    font-size: 30px;
+
+  }
+  
+  .nsr-result-table td.buttons {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .nsr-result-table button {
+    cursor: pointer;
+    padding: 10px;
+    margin-left: 10px;
+  }
+  
+  .nsr-result-table .save-button {
+    background-color: #4d94ff;
+    color: white;
+    margin: 0 auto; /* Center-align the container */
+    padding: 20px;
+    font-size: 20px;
+  }
+  .nsr-result-table .reset-button {
+    background-color: gray;
+    color: white;
+    margin: 0 auto; /* Center-align the container */
+    padding: 20px;
+    font-size: 20px;
+  }
+
+  .nsr-result-table tbody td.first-row {
+    background-color: #A4A4A4; /* 원하는 배경색 지정 */
+  }
+
+  /* 빈 행의 스타일 */
+.nsr-result-table tbody tr.empty-row td {
+  height: 50px; /* 원하는 높이로 설정 */
+  border: none;
+}
+
+.content-cell {
+  height: 30px; /* 원하는 너비값으로 설정 */
+}
+
+.input-field {
+  width: 80px; /* 입력 필드의 너비를 조정 */
+  height: 50px; /* 입력 필드의 높이를 조정 */
+  font-size: 25px; /* 글자 크기를 키움 */
+  text-align: center; /* 글자 위치를 중앙으로 정렬 */
+  padding: 5px; /* 여백 조정 */
+  border: 1px solid #ccc; /* 테두리 스타일 */
+  border-radius: 4px; /* 테두리 둥글게 */
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.empty_space{
+  height: 30px;
+}
+.empty_space2{
+  height: 100px;
+}
+
+.smaller-cell {
+  width: 8%; /* 예시로 너비를 5%로 설정함. 필요에 따라 조절 가능 */
+}
+
+.text-center {
+  text-align: center;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+
+}
+
+th {
+  background-color: #f2f2f2;
+  text-align: center;
+}
+
+/* 클래스 기반 스타일 */
+
+
+.category {
+  width: 10%;
+  text-align: center;
+}
+
+.content {
+  width: 75%;
+  font-size: 20px;
+}
+
+
+.score-cell {
+  width: 5%;
+  font-size: 20px;
+}
+
+.score-sans{
+  width: 10%;
+}
+
+/* 테이블 컨테이너 스타일 */
+.table-container {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+  margin: 20px auto; /* 중앙 정렬 및 위아래 여백 */
+}
+
+.nsr-result-container .table-container td.selected {
+  background: rgba(255, 192, 203, 0.5);
+}
+
+
+
+
+.button-container1 {
+  display: flex;
+  justify-content: space-between; /* 버튼 사이에 공간을 균등하게 배분 */
+  padding: 10px; /* 버튼 주변에 패딩 추가 */
+}
+
+.save-button,
+.reset-button {
+  flex: 1; /* 버튼들이 동일한 너비를 가지도록 설정 */
+  margin: 0 5px; /* 버튼 사이에 약간의 간격을 추가 */
+}
+
+.save-button {
+  flex: 1; /* 동일한 너비 유지 */
+  margin: 0 5px; /* 버튼 간 간격 유지 */
+  background-color: rgb(250, 0, 0); /* 버튼 배경을 빨간색으로 설정 */
+  height: calc(var(--button-height, 40px) * 3); /* 높이를 3배로 설정 (기본값 40px) */
+}
+
+
+.save-button {
+  margin-right: 5px; /* 오른쪽 버튼과의 간격 */
+}
+
+.reset-button {
+  margin-left: 5px; /* 왼쪽 버튼과의 간격 */
+}
+
+.button-container2 {
+  display: flex;
+  justify-content: space-between; /* 버튼 사이의 공간을 균등하게 분배 */
+  padding: 10px; /* 버튼 주변에 패딩 추가 */
+}
+
+.nav-button {
+  flex: 1; /* 버튼이 동일한 너비를 가지도록 설정 */
+  margin: 0 10px; /* 버튼 사이에 약간의 간격을 추가 */
+  padding: 10px; /* 버튼 내부에 패딩 추가 */
+  box-sizing: border-box; /* 패딩과 보더를 포함한 버튼의 전체 너비 설정 */
+  text-align: center; /* 버튼 내부의 텍스트를 가운데 정렬 */
+  font-size: 15px;
+}
+
+.selectedk {
+  background-color: lightgray; /* 원하는 색상으로 변경 가능 */
+}
+
+
