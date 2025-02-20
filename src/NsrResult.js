@@ -7,32 +7,34 @@ import "./NsrResult.css";
 
 import { getRoundDescription } from "./util/getRoundDescription";
 import { getKindDescription } from "./util/getKindDescription";
-import { saveNsrResultPlayerCnt } from "./util/saveHandlers";
-
-import { fetchNsrResult } from "./util/fetchNsrResult";
-import { fetchPlayerCnt } from "./util/fetchPlayerCnt";
 
 import TableContainer from "./component/TableContainer";
 import TeamCountInput from "./component/TeamCountInput";
 import FinalButton from "./component/FinalButton";
 import BackBar from "./component/BackBar";
 
+const calculateTotal = (selectedCells) => {
+  //선택된 셀들의 총합
+  return Object.values(selectedCells).reduce(
+    (total, value) => total + (value ? value : 0),
+    0
+  );
+};
+
 function NsrResult() {
-  //파리미터 값 가져오기
+  //#region params
   const {
-    api, //쿼리 보낼 주소. pc에선 localhost, 핸드폰으로 접속했을땐 pc의 ip주소
-    to_cd, // 대회 식별 코드
-    phone_number, // tour_refree 테이블의 MOBILE_NO 컬럼값. 암호화된 심사위원 핸드폰번호. 로그인에 사용
-    detail_class_cd, // 세부종목 (89202 = 89 2 02 = 국학기공 일반부 단체전) -> 가운데 2 는 kind_cd (일반부 어르신부 etc)
-    rh_cd, // 라운드. 예선 or 결승
-    refree, // 심사위원장(1), 기술위원(2,3) 예술위원(4,5) 완성위원(6,7)
-    category, // 기술성(1), 예술성(2), 완성도(3) -- 심사위원장 제외 refree값을 2로 나눈 값
-    index, // n번째 선수 or 팀. 주로 playerData와 같이 사용.
+    api,
+    to_cd,
+    phone_number,
+    detail_class_cd,
+    rh_cd,
+    refree,
+    category,
+    index,
   } = useParams();
   const kind_cd = Math.floor((detail_class_cd % 1000) / 100);
 
-  // 파라미터 객체화
-  // 다른 컴포넌트에 간단하게 넘겨주기 위해 사용
   const [params, setParams] = useState({});
   useEffect(() => {
     setParams((prevState) => ({
@@ -57,25 +59,19 @@ function NsrResult() {
     category,
     index,
   ]);
-
-  //recoil에서 가져온, 해당 예선전 혹은 결승전에 참여하는 선수들 목록(playersData)와
-  //현재 선수 정보 객체 (player's'Data[index] = playerData)
+  //#endregion
+  //#region playerData
   const playersData = useRecoilValue(playerDataState);
   const [playerData, setPlayerData] = useState({
     korNm: "김한수",
     entrantTeamId: -7,
   });
-
-  //다음 선수에 대한 정보 객체
-  //현재 화면에서 다음 선수로 바로 이동하기 위해 사용
   const [nextPlayerData, setNextPlayerData] = useState({
     index: index < playerData.length - 1 ? Number(index) + 1 : null,
     link: 0,
     name: "김한수",
     rh_cd: null,
   });
-
-  // setPlayerData + setNextPlayerData
   useEffect(() => {
     setPlayerData((prevState) => ({
       ...prevState,
@@ -96,7 +92,8 @@ function NsrResult() {
       }));
     }
   }, [playersData, index, category]);
-
+  //#endregion
+  //#region nsrResult
   const [nsrResult, setNsrResult] = useState({
     markBaseId: -7, // 채점표 ID
     markData: [], // 채점표 내용
@@ -105,49 +102,95 @@ function NsrResult() {
     maxPoint: -7, // 채점 항목별 최고점 (6점) -> 1 2 3 4 5 6 점수판 만드는데 사용
     categories: [], // 채점표 그릴때 안법, 보법 등 하나의 카테고리로 묶을때 사용하는 리스트
     maxCount: -7, // 채점표 문항 개수중 최대값 (12/5/6) -> 12 (모든 항목이 채점됐는지 확인하는데 사용)
-    isSave: -7, // 해당 채점표 저장 여부
   });
 
-  //fetchNsrResult
-  //params 값을 기반으로 nsrresult_mark에 저장되어있던 값들을 가져온다
+  //public 폴더에 저장되어있는 json 파일에서 채점표를 읽어온다
   useEffect(() => {
-    if (playerData.entrantTeamId === -7) return;
-    fetchNsrResult({
-      params,
-      entrant_team_id: playerData.entrantTeamId,
-      setNsrResult,
-    });
-  }, [params, playerData]);
+    fetch(`/markTable${category}.json`)
+      .then((response) => response.json())
+      .then((json) => {
+        const savedData = localStorage.getItem(
+          // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
+          `nsrResult/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
+        );
+        if (
+          savedData &&
+          refree === "1" &&
+          countValidScores(JSON.parse(savedData)) === 12
+        ) {
+          setNsrResult((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+            isSave: 1,
+          }));
+        } else if (
+          savedData &&
+          refree === "2" &&
+          countValidScores(JSON.parse(savedData)) === 5
+        ) {
+          setNsrResult((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+            isSave: 1,
+          }));
+        } else if (
+          savedData &&
+          refree === "3" &&
+          countValidScores(JSON.parse(savedData)) === 4
+        ) {
+          setNsrResult((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+            isSave: 1,
+          }));
+        } else {
+          setNsrResult((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+          }));
+        }
+      });
+  }, [category, detail_class_cd, rh_cd, refree, index]);
 
+  //selectedCell이 수정될때마다 로컬 스토리지에 저장한다
+  useEffect(() => {
+    if (nsrResult.markBaseId === -7) return;
+    if (Object.keys(nsrResult.selectedCells).length === 0) return;
+    localStorage.setItem(
+      `nsrResult/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`,
+      JSON.stringify(nsrResult.selectedCells)
+    ); // localStorage 저장
+    localStorage.setItem(
+      `score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${
+        (index % 6) + 1
+      }`,
+      JSON.stringify(calculateTotal(nsrResult.selectedCells))
+    );
+  }, [nsrResult.selectedCells]);
+  //#endregion
+  //#region teamCount
   const [teamCount, setTeamCount] = useState(0); // 심판이 직접 센 팀 인원수
-
-  //fetchPlayerCnt
   useEffect(() => {
-    if (playerData.entrantTeamId === -7) return;
-    if (detail_class_cd === -7 || detail_class_cd % 2 !== 0) return; //단채전에서만 사용;
-    fetchPlayerCnt({
-      params,
-      playerData,
-      setTeamCount,
-    });
-  }, [params, playerData]);
+    const savedData = localStorage.getItem(
+      // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
+      `teamCount/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
+    );
+    setTeamCount(Number(savedData));
+  }, [category, detail_class_cd, rh_cd, refree, index]);
 
-  //saveNsrResultPlyaerCnt
-  //teamCount 값이 바뀔때마다 db에 저장
   useEffect(() => {
-    if (teamCount > 999) return;
-    if (teamCount === 0) return;
-    if (teamCount < 0) return;
-    if (teamCount === null) return;
-    if (isNaN(teamCount)) return;
-
-    saveNsrResultPlayerCnt({
-      params,
-      playerData,
-      teamCount,
-    });
+    if (teamCount < 1) return;
+    localStorage.setItem(
+      `teamCount/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`,
+      teamCount
+    ); // localStorage 저장
   }, [teamCount]);
-
+  //#endregion
+  //#region etc
   const refreeName = useRecoilValue(refreeNameState);
   const backBar = {
     url: `/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${category}`,
@@ -159,13 +202,14 @@ function NsrResult() {
   const [isSaveFinal, setIsSaveFinal] = useState(false); // 인원수와 각각의 채점 상태를 총괄하여 최종 저장 여부를 나타내는 state
   useEffect(() => {
     setIsSaveFinal(true);
-    if (nsrResult.isSave !== 1) {
+    if (nsrResult.maxCount === -7) return;
+    if (nsrResult.maxCount !== countValidScores(nsrResult.selectedCells)) {
       setIsSaveFinal(false);
     }
     if (detail_class_cd % 2 === 0 && (teamCount === 0 || isNaN(teamCount))) {
       setIsSaveFinal(false);
     }
-  }, [nsrResult.isSave, teamCount]);
+  }, [nsrResult, teamCount]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -176,7 +220,7 @@ function NsrResult() {
       (value) => typeof value === "number" && value > 0
     ).length;
   };
-
+  //#endregion
   return (
     <div className="nsr-result-container">
       <BackBar

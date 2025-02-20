@@ -77,7 +77,6 @@ const ScoreButtonRow = ({
                 </button>
               ) : (
                 <button
-                  onClick={handleMaxCheck.bind(null, nextPlayerData.link)}
                   className="nav-button"
                   style={{
                     flex: "1",

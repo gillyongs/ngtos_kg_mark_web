@@ -7,57 +7,28 @@ import "./NsrResult.css";
 
 import { getRoundDescription } from "./util/getRoundDescription";
 import { getKindDescription } from "./util/getKindDescription";
-import { saveNsrResultPlayerCnt } from "./util/saveHandlers";
-
-import { fetchNsrResult } from "./util/fetchNsrResult";
-import { fetchPlayerCnt } from "./util/fetchPlayerCnt";
 
 import TableContainer from "./component/TableContainer";
 import TeamCountInput from "./component/TeamCountInput";
 import FinalButton from "./component/FinalButton";
 import BackBar from "./component/BackBar";
 
+const calculateTotal = (selectedCells) => {
+  //선택된 셀들의 총합
+  return Object.values(selectedCells).reduce(
+    (total, value) => total + (value ? value : 0),
+    0
+  );
+};
+
 function NsrResult() {
+  //#region params
   const { api, to_cd, phone_number, detail_class_cd, rh_cd, category, index } =
     useParams();
+  const refree = 0;
   const kind_cd = Math.floor((detail_class_cd % 1000) / 100);
-  const refree = "1"; // 심판번호 1로 고정.
 
-  //category 값이 각각 1,2,3인 params 객체 3개 생성
-  const [params, setParams] = useState({
-    api: api,
-    to_cd: to_cd,
-    phone_number: phone_number,
-    detail_class_cd: detail_class_cd,
-    rh_cd: rh_cd,
-    refree: refree,
-    category: "1",
-    index: index,
-    kind_cd: Math.floor((detail_class_cd % 1000) / 100),
-  });
-  const [params2, setParams2] = useState({
-    api: api,
-    to_cd: to_cd,
-    phone_number: phone_number,
-    detail_class_cd: detail_class_cd,
-    rh_cd: rh_cd,
-    refree: refree,
-    category: "2",
-    index: index,
-    kind_cd: Math.floor((detail_class_cd % 1000) / 100),
-  });
-  const [params3, setParams3] = useState({
-    api: api,
-    to_cd: to_cd,
-    phone_number: phone_number,
-    detail_class_cd: detail_class_cd,
-    rh_cd: rh_cd,
-    refree: refree,
-    category: "3",
-    index: index,
-    kind_cd: Math.floor((detail_class_cd % 1000) / 100),
-  });
-
+  const [params, setParams] = useState({});
   useEffect(() => {
     setParams((prevState) => ({
       ...prevState,
@@ -67,31 +38,7 @@ function NsrResult() {
       detail_class_cd: detail_class_cd,
       rh_cd: rh_cd,
       refree: refree,
-      category: "1",
-      index: index,
-      kind_cd: Math.floor((detail_class_cd % 1000) / 100),
-    }));
-    setParams2((prevState) => ({
-      ...prevState,
-      api: api,
-      to_cd: to_cd,
-      phone_number: phone_number,
-      detail_class_cd: detail_class_cd,
-      rh_cd: rh_cd,
-      refree: refree,
-      category: "2",
-      index: index,
-      kind_cd: Math.floor((detail_class_cd % 1000) / 100),
-    }));
-    setParams3((prevState) => ({
-      ...prevState,
-      api: api,
-      to_cd: to_cd,
-      phone_number: phone_number,
-      detail_class_cd: detail_class_cd,
-      rh_cd: rh_cd,
-      refree: refree,
-      category: "3",
+      category: category,
       index: index,
       kind_cd: Math.floor((detail_class_cd % 1000) / 100),
     }));
@@ -105,20 +52,19 @@ function NsrResult() {
     category,
     index,
   ]);
-
+  //#endregion
+  //#region playerData
   const playersData = useRecoilValue(playerDataState);
   const [playerData, setPlayerData] = useState({
     korNm: "김한수",
     entrantTeamId: -7,
   });
-
   const [nextPlayerData, setNextPlayerData] = useState({
     index: index < playerData.length - 1 ? Number(index) + 1 : null,
     link: 0,
     name: "김한수",
     rh_cd: null,
   });
-
   useEffect(() => {
     setPlayerData((prevState) => ({
       ...prevState,
@@ -126,8 +72,9 @@ function NsrResult() {
       entrantTeamId: playersData[index].ID,
     }));
 
-    const nextIndex = index < playersData.length - 1 ? Number(index) + 1 : null;
+    const nextIndex = index < playersData.length - 1 ? Number(index) + 1 : null; // 다음 요소의 인덱스
     if (nextIndex !== null) {
+      // 현재 선수가 마지막 선수가 아니면
       const nextRhcd = playersData[nextIndex].rh_cd;
       setNextPlayerData((prevUser) => ({
         ...prevUser,
@@ -138,8 +85,8 @@ function NsrResult() {
       }));
     }
   }, [playersData, index, category]);
-
-  // 각 카테고리별 채점결과 객체
+  //#endregion
+  //#region nsrResult
   const [nsrResult, setNsrResult] = useState({
     markBaseId: -7, // 채점표 ID
     markData: [], // 채점표 내용
@@ -171,54 +118,144 @@ function NsrResult() {
     isSave: -7, // 해당 채점표 저장 여부
   });
 
-  //fetchNsrResult
-  //params 1,2,3 값을 기반으로 nsrresult_mark에 저장되어있던 값들을 가져와
-  //nsrresult 1,2,3에 넣는다
+  //public 폴더에 저장되어있는 json 파일에서 채점표를 읽어온다
   useEffect(() => {
-    if (playerData.entrantTeamId === -7) return;
-    fetchNsrResult({
-      params: params,
-      entrant_team_id: playerData.entrantTeamId,
-      setNsrResult: setNsrResult,
-    });
-    fetchNsrResult({
-      params: params2,
-      entrant_team_id: playerData.entrantTeamId,
-      setNsrResult: setNsrResult2,
-    });
-    fetchNsrResult({
-      params: params3,
-      entrant_team_id: playerData.entrantTeamId,
-      setNsrResult: setNsrResult3,
-    });
-  }, [params, playerData]);
+    fetch(`/markTable1.json`)
+      .then((response) => response.json())
+      .then((json) => {
+        const savedData = localStorage.getItem(
+          // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
+          `nsrResult1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
+        );
 
+        if (savedData && countValidScores(JSON.parse(savedData)) === 12) {
+          setNsrResult((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+            isSave: 1,
+          }));
+        } else {
+          setNsrResult((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+          }));
+        }
+      });
+  }, [category, detail_class_cd, rh_cd, refree, index]);
+  useEffect(() => {
+    fetch(`/markTable2.json`)
+      .then((response) => response.json())
+      .then((json) => {
+        const savedData = localStorage.getItem(
+          // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
+          `nsrResult2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
+        );
+        if (savedData && countValidScores(JSON.parse(savedData)) === 5) {
+          setNsrResult2((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+            isSave: 1,
+          }));
+        } else {
+          setNsrResult2((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+          }));
+        }
+      });
+  }, [category, detail_class_cd, rh_cd, refree, index]);
+  useEffect(() => {
+    fetch(`/markTable3.json`)
+      .then((response) => response.json())
+      .then((json) => {
+        const savedData = localStorage.getItem(
+          // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
+          `nsrResult3/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
+        );
+        if (savedData && countValidScores(JSON.parse(savedData)) === 4) {
+          setNsrResult3((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+            isSave: 1,
+          }));
+        } else {
+          setNsrResult3((prev) => ({
+            ...prev,
+            ...json,
+            selectedCells: savedData ? JSON.parse(savedData) : {},
+          }));
+        }
+      });
+  }, [category, detail_class_cd, rh_cd, refree, index]);
+
+  //selectedCell이 수정될때마다 로컬 스토리지에 저장한다
+  useEffect(() => {
+    if (nsrResult.markBaseId === -7) return;
+    if (Object.keys(nsrResult.selectedCells).length === 0) return;
+    localStorage.setItem(
+      `nsrResult1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`,
+      JSON.stringify(nsrResult.selectedCells)
+    ); // localStorage 저장
+    localStorage.setItem(
+      `score1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${
+        (index % 6) + 1
+      }`,
+      JSON.stringify(calculateTotal(nsrResult.selectedCells))
+    );
+  }, [nsrResult.selectedCells]);
+  useEffect(() => {
+    if (nsrResult2.markBaseId === -7) return;
+    if (Object.keys(nsrResult2.selectedCells).length === 0) return;
+    localStorage.setItem(
+      `nsrResult2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`,
+      JSON.stringify(nsrResult2.selectedCells)
+    ); // localStorage 저장
+    localStorage.setItem(
+      `score2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${
+        (index % 6) + 1
+      }`,
+      JSON.stringify(calculateTotal(nsrResult2.selectedCells))
+    );
+  }, [nsrResult2.selectedCells]);
+  useEffect(() => {
+    if (nsrResult3.markBaseId === -7) return;
+    if (Object.keys(nsrResult3.selectedCells).length === 0) return;
+    localStorage.setItem(
+      `nsrResult3/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`,
+      JSON.stringify(nsrResult3.selectedCells)
+    ); // localStorage 저장
+    localStorage.setItem(
+      `score3/${detail_class_cd}/${rh_cd}/${refree}/${category}/${
+        (index % 6) + 1
+      }`,
+      JSON.stringify(calculateTotal(nsrResult3.selectedCells))
+    );
+  }, [nsrResult3.selectedCells]);
+  //#endregion
+  //#region teamCount
   const [teamCount, setTeamCount] = useState(0); // 심판이 직접 센 팀 인원수
+  useEffect(() => {
+    const savedData = localStorage.getItem(
+      // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
+      `teamCount/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
+    );
+    setTeamCount(Number(savedData));
+  }, [category, detail_class_cd, rh_cd, refree, index]);
 
   useEffect(() => {
-    if (playerData.entrantTeamId === -7) return;
-    if (detail_class_cd === -7 || detail_class_cd % 2 !== 0) return; //단체전에서만 사용;
-    fetchPlayerCnt({
-      params,
-      playerData,
-      setTeamCount,
-    });
-  }, [params, playerData]);
-
-  useEffect(() => {
-    if (teamCount > 999) return;
-    if (teamCount === 0) return;
-    if (teamCount < 0) return;
-    if (teamCount === null) return;
-    if (isNaN(teamCount)) return;
-
-    saveNsrResultPlayerCnt({
-      params,
-      playerData,
-      teamCount,
-    });
+    if (teamCount < 1) return;
+    localStorage.setItem(
+      `teamCount/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`,
+      teamCount
+    ); // localStorage 저장
   }, [teamCount]);
-
+  //#endregion
+  //#region etc
   const refreeName = useRecoilValue(refreeNameState);
   const backBar = {
     url: `/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${category}`,
@@ -231,19 +268,22 @@ function NsrResult() {
   const [isSaveFinal, setIsSaveFinal] = useState(false);
   useEffect(() => {
     setIsSaveFinal(true);
-    if (nsrResult.isSave !== 1) {
+    if (nsrResult.maxCount === -7) return;
+    if (nsrResult2.maxCount === -7) return;
+    if (nsrResult3.maxCount === -7) return;
+    if (nsrResult.maxCount !== countValidScores(nsrResult.selectedCells)) {
       setIsSaveFinal(false);
     }
-    if (nsrResult2.isSave !== 1) {
+    if (nsrResult2.maxCount !== countValidScores(nsrResult2.selectedCells)) {
       setIsSaveFinal(false);
     }
-    if (nsrResult3.isSave !== 1) {
+    if (nsrResult3.maxCount !== countValidScores(nsrResult3.selectedCells)) {
       setIsSaveFinal(false);
     }
     if (detail_class_cd % 2 === 0 && (teamCount === 0 || isNaN(teamCount))) {
       setIsSaveFinal(false);
     }
-  }, [nsrResult.isSave, nsrResult2.isSave, nsrResult3.isSave, teamCount]);
+  }, [nsrResult, nsrResult2, nsrResult3, teamCount]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -254,7 +294,7 @@ function NsrResult() {
       (value) => typeof value === "number" && value > 0
     ).length;
   };
-
+  //#endregion
   return (
     <div className="nsr-result-container">
       <BackBar
@@ -281,14 +321,14 @@ function NsrResult() {
         nsrResult={nsrResult2}
         category={2}
         setNsrResult={setNsrResult2}
-        params={params2}
+        params={params}
         playerData={playerData}
       />
       <TableContainer
         nsrResult={nsrResult3}
         category={3}
         setNsrResult={setNsrResult3}
-        params={params3}
+        params={params}
         playerData={playerData}
       />
       <table>

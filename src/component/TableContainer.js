@@ -1,6 +1,5 @@
 // import React from "react";
 import React, { useState, useEffect } from "react";
-import { saveNsrResultMark, saveNsrResult } from "../util/saveHandlers";
 
 const TableContainer = ({
   nsrResult,
@@ -59,20 +58,12 @@ const TableContainer = ({
     if (value == null || value == undefined) {
       value = -1;
     }
-    saveNsrResultMark({
-      params: params,
-      playerData: playerData,
-      nsrResult: nsrResult,
-      rowId: rowId,
-      value: value,
-    });
 
     if (numericValuesCount === nsrResult.maxCount) {
       const totalCounts = Object.values(newSelectedCells).reduce(
         (total, value) => total + (value ? value : 0),
         0
       );
-      saveNsrResult({ params, playerData, score: totalCounts });
       setNsrResult((prevState) => ({
         ...prevState,
         isSave: 1,

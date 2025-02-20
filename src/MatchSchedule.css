@@ -13,7 +13,7 @@
 
 .match-schedule-table th,
 .match-schedule-table td {
-  border: 1px solid #ddd;
+  border: 1px solid #ababab;
   padding: 20px;
   text-align: left;
 }
@@ -33,7 +33,6 @@ tbody tr.bold-text td {
   padding: 10px; /* Adjust the padding as needed */
   font-size: 26px; /* Adjust the font size as needed */
 }
-
 
 /* Add the following media query for mobile devices */
 @media only screen and (max-width: 767px) {
@@ -56,24 +55,24 @@ tbody tr.bold-text td {
   word-wrap: break-word; /* 길이가 길 경우 줄바꿈 */
   text-align: center; /* 가운데 정렬 */
   margin: 0; /* 여백 제거 */
-  margin-top:30px;
-  margin-bottom:20px;
+  margin-top: 30px;
+  margin-bottom: 20px;
 }
 
 @media (max-width: 768px) {
   .responsive-title {
-      font-size: 1.8rem; /* 태블릿에서 글자 크기 축소 */
-      line-height: 1.3;
-      margin-top:30px;
-      margin-bottom:20px;
+    font-size: 1.8rem; /* 태블릿에서 글자 크기 축소 */
+    line-height: 1.3;
+    margin-top: 30px;
+    margin-bottom: 20px;
   }
 }
 
 @media (max-width: 480px) {
   .responsive-title {
-      font-size: 1.5rem; /* 모바일에서 글자 크기 더 축소 */
-      line-height: 1.4;
-      margin-top:30px;
-      margin-bottom:20px;
+    font-size: 1.5rem; /* 모바일에서 글자 크기 더 축소 */
+    line-height: 1.4;
+    margin-top: 30px;
+    margin-bottom: 20px;
   }
 }

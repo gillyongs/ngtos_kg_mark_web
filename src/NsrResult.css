@@ -8,7 +8,6 @@
 */
 .nsr-result-container {
   text-align: center;
-
 }
 
 .nsr-result-table {
@@ -16,81 +15,79 @@
   border-collapse: collapse;
   margin-top: 20px;
 }
-  
-  .big-cell {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  .small-cell {
-    border: 1px solid #ddd;
-    padding: 8px;
-    cursor: pointer;
-    text-align: center;
-    background: #f5f5f5;
-  }
-  
-  
-  .nsr-result-table th,
-  .nsr-result-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  .nsr-result-table th {
-    background: #e6e6e6;
-  }
-  
-  .nsr-result-table tbody tr:nth-child(even) {
-    background: #f5f5f5;
-  }
-  
-  .nsr-result-table td.selected {
-    background: rgba(255, 192, 203, 0.5);
-  }
-  
-  .nsr-result-table td.total {
-    border: 1px solid #ddd;
-    padding: 8px;
-    font-size: 25px;
-  }
 
-  .total-row{
-    font-size: 30px;
+.big-cell {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
 
-  }
-  
-  .nsr-result-table td.buttons {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  .nsr-result-table button {
-    cursor: pointer;
-    padding: 10px;
-    margin-left: 10px;
-  }
-  
-  .nsr-result-table .save-button {
-    background-color: #4d94ff;
-    color: white;
-    margin: 0 auto; /* Center-align the container */
-    padding: 20px;
-    font-size: 20px;
-  }
-  .nsr-result-table .reset-button {
-    background-color: gray;
-    color: white;
-    margin: 0 auto; /* Center-align the container */
-    padding: 20px;
-    font-size: 20px;
-  }
+.small-cell {
+  border: 1px solid #ddd;
+  padding: 8px;
+  cursor: pointer;
+  text-align: center;
+  background: #f5f5f5;
+}
 
-  .nsr-result-table tbody td.first-row {
-    background-color: #A4A4A4; /* 원하는 배경색 지정 */
-  }
+.nsr-result-table th,
+.nsr-result-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
 
-  /* 빈 행의 스타일 */
+.nsr-result-table th {
+  background: #e6e6e6;
+}
+
+.nsr-result-table tbody tr:nth-child(even) {
+  background: #f5f5f5;
+}
+
+.nsr-result-table td.selected {
+  background: rgba(255, 192, 203, 0.5);
+}
+
+.nsr-result-table td.total {
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-size: 25px;
+}
+
+.total-row {
+  font-size: 30px;
+}
+
+.nsr-result-table td.buttons {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.nsr-result-table button {
+  cursor: pointer;
+  padding: 10px;
+  margin-left: 10px;
+}
+
+.nsr-result-table .save-button {
+  background-color: #4d94ff;
+  color: white;
+  margin: 0 auto; /* Center-align the container */
+  padding: 20px;
+  font-size: 20px;
+}
+.nsr-result-table .reset-button {
+  background-color: gray;
+  color: white;
+  margin: 0 auto; /* Center-align the container */
+  padding: 20px;
+  font-size: 20px;
+}
+
+.nsr-result-table tbody td.first-row {
+  background-color: #a4a4a4; /* 원하는 배경색 지정 */
+}
+
+/* 빈 행의 스타일 */
 .nsr-result-table tbody tr.empty-row td {
   height: 50px; /* 원하는 높이로 설정 */
   border: none;
@@ -108,14 +105,14 @@
   padding: 5px; /* 여백 조정 */
   border: 1px solid #ccc; /* 테두리 스타일 */
   border-radius: 4px; /* 테두리 둥글게 */
-  margin-top:10px;
-  margin-bottom:10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.empty_space{
+.empty_space {
   height: 30px;
 }
-.empty_space2{
+.empty_space2 {
   height: 100px;
 }
 
@@ -133,10 +130,10 @@ body {
   padding: 0;
 }
 
-th, td {
-  border: 1px solid #ddd;
+th,
+td {
+  border: 1px solid #a1a1a1;
   padding: 8px;
-
 }
 
 th {
@@ -145,7 +142,6 @@ th {
 }
 
 /* 클래스 기반 스타일 */
-
 
 .category {
   width: 10%;
@@ -157,13 +153,12 @@ th {
   font-size: 20px;
 }
 
-
 .score-cell {
   width: 5%;
   font-size: 20px;
 }
 
-.score-sans{
+.score-sans {
   width: 10%;
 }
 
@@ -178,9 +173,6 @@ th {
 .nsr-result-container .table-container td.selected {
   background: rgba(255, 192, 203, 0.5);
 }
-
-
-
 
 .button-container1 {
   display: flex;
@@ -198,9 +190,10 @@ th {
   flex: 1; /* 동일한 너비 유지 */
   margin: 0 5px; /* 버튼 간 간격 유지 */
   background-color: rgb(250, 0, 0); /* 버튼 배경을 빨간색으로 설정 */
-  height: calc(var(--button-height, 40px) * 3); /* 높이를 3배로 설정 (기본값 40px) */
+  height: calc(
+    var(--button-height, 40px) * 3
+  ); /* 높이를 3배로 설정 (기본값 40px) */
 }
-
 
 .save-button {
   margin-right: 5px; /* 오른쪽 버튼과의 간격 */
@@ -228,5 +221,3 @@ th {
 .selectedk {
   background-color: lightgray; /* 원하는 색상으로 변경 가능 */
 }
-
-

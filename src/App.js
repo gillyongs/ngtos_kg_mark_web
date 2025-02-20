@@ -7,7 +7,6 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import Tour from "./Tour"; //대회
 import Login from "./Login";
 import MatchSchedule from "./MatchSchedule"; //경기일정
 import Player from "./Player"; //스타트리스트
@@ -19,8 +18,10 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/localhost" />} />
-          <Route path="/:api" element={<Tour />} />
+          <Route
+            path="/"
+            element={<Navigate to="/localhost/2024test/login" />}
+          />
           <Route path="/:api/:to_cd/login" element={<Login />} />
           <Route
             path="/:api/:to_cd/:phone_number"
@@ -35,7 +36,7 @@ function App() {
             element={<NsrResult />}
           />
           <Route
-            path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/1/:category/:index"
+            path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/0/:category/:index"
             element={<NsrResultKing />}
           />
           {/*

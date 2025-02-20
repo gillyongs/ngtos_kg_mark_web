@@ -1,0 +1,107 @@
+{
+  "markBaseId": 1,
+  "markData": [
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "1",
+      "MARK_CONTENT": "두 눈이 편안하고 경추가 정수리 중심으로 잘 세워져 있는가?",
+      "MAX_POINT": "3",
+      "CATEGORY": "안법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "2",
+      "MARK_CONTENT": "시선과 동작이 부합하는가?",
+      "MAX_POINT": "3",
+      "CATEGORY": "안법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "3",
+      "MARK_CONTENT": "각 보법에 맞는 동작으로, 무게 중심이 잘 실려 있는가?",
+      "MAX_POINT": "4",
+      "CATEGORY": "보법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "4",
+      "MARK_CONTENT": "각 보법에 맞게 고관절, 무릎, 발목의 각도가 잘 유지되는가?",
+      "MAX_POINT": "3",
+      "CATEGORY": "보법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "5",
+      "MARK_CONTENT": "보법의 연결이 자연스럽고, 하체 관절의 회전이 잘 이루어지는가?",
+      "MAX_POINT": "3",
+      "CATEGORY": "보법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "6",
+      "MARK_CONTENT": "허리가 수법 보법에 부합하여 회전하고, 움직이는가?",
+      "MAX_POINT": "3",
+      "CATEGORY": "신법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "7",
+      "MARK_CONTENT": "동작에 부합하여 가슴과 등이 열리고 닫히는가?",
+      "MAX_POINT": "3",
+      "CATEGORY": "신법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "8",
+      "MARK_CONTENT": "각 수법에 맞는 동작을(위치, 높이) 하고 있는가?",
+      "MAX_POINT": "3",
+      "CATEGORY": "수법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "9",
+      "MARK_CONTENT": "각 수법에 맞는 팔의(어깨, 팔꿈치, 손목) 각도를 유지하고, 회전 하는가?",
+      "MAX_POINT": "3",
+      "CATEGORY": "수법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "10",
+      "MARK_CONTENT": "상허 하실이 이뤄지는가?",
+      "MAX_POINT": "4",
+      "CATEGORY": "심법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "11",
+      "MARK_CONTENT": "의식 동작 호흡이 합을 이루는가?",
+      "MAX_POINT": "4",
+      "CATEGORY": "심법"
+    },
+    {
+      "ID": "1",
+      "MID": "1",
+      "SEQ_NO": "12",
+      "MARK_CONTENT": "안법 보법 신법 수법 심법이 합을 이루는가?",
+      "MAX_POINT": "4",
+      "CATEGORY": "심법"
+    }
+  ],
+  "selectedCells": {},
+  "allPoint": 40,
+  "maxPoint": "4",
+  "categories": ["안법", "보법", "신법", "수법", "심법"],
+  "maxCount": 12,
+  "isSave": 0
+}
