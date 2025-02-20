@@ -7,6 +7,7 @@ import { playerDataState, refreeNameState } from "./util/recoild";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getRoundDescription } from "./util/getRoundDescription";
 import { getKindDescription } from "./util/getKindDescription";
+import { useNavigate } from "react-router-dom";
 
 function Player() {
   const { api, to_cd, phone_number, detail_class_cd, rh_cd, refree, category } =
@@ -16,6 +17,7 @@ function Player() {
     useRecoilState(playerDataState); // 선수 목록을 recoil을 통해 저장
   setRecoilPlayerData(playerData);
   const refreeName = useRecoilValue(refreeNameState);
+  const navigate = useNavigate();
 
   const getHeaderLabel = (refree) => {
     // 테이블 헤더 텍스트
@@ -101,7 +103,9 @@ function Player() {
                   <tr
                     key={result.ID}
                     onClick={() =>
-                      (window.location.href = `/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${refree}/${index}`)
+                      navigate(
+                        `/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${refree}/${index}`
+                      )
                     }
                     style={{ cursor: "pointer" }}
                   >
@@ -117,7 +121,9 @@ function Player() {
                   <tr
                     key={result.ID}
                     onClick={() =>
-                      (window.location.href = `/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${refree}/${index}`)
+                      navigate(
+                        `/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${refree}/${index}`
+                      )
                     }
                     style={{ cursor: "pointer" }}
                   >

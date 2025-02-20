@@ -5,11 +5,13 @@ import "./Login.css";
 import { encryptText } from "./util/encryptionUtils"; // 심판 전화번호 암호화
 import { useSetRecoilState } from "recoil";
 import { refreeNameState } from "./util/recoild";
+import { useNavigate } from "react-router-dom";
 
 const Refree = () => {
   const { api, to_cd } = useParams(); // 쿼리 요청을 보낼 대회 운영 pc 아이피와 대회 pk를 주소창 url에서 파라미터로 받아온다.
   const [phoneNumber, setPhoneNumber] = useState(""); // input창에 입력된 phoneNumber를 state로 관리
-  const setRefreeName = useSetRecoilState(refreeNameState); // 심판명을 recoil에 저장하여 전역변수처럼 사용
+  const setRefreeName = useSetRecoilState(refreeNameState); // 심판명을 recoil에 저장하여 전역변수처럼 사용]
+  const navigate = useNavigate();
 
   const handleLoginClick = () => {
     if (
@@ -24,7 +26,7 @@ const Refree = () => {
     // 로그인버튼 클릭시 db 조회
     setRefreeName("김한수"); // 심판명 저장
     const nextLink = `/${api}/${to_cd}/${phoneNumber}`; //전화번호 암호화
-    window.location.href = nextLink; // 경기 일정 화면으로 넘어감
+    navigate(nextLink);
   };
 
   const handlePhoneNumberChange = (e) => {

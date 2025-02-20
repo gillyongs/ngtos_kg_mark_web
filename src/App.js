@@ -16,7 +16,7 @@ import NsrResultKing from "./NsrResultKing"; //경기결과
 function App() {
   return (
     <div className="App">
-      <Router>
+      <Router basename="ngtos_kg_mark_web">
         <Routes>
           <Route
             path="/"

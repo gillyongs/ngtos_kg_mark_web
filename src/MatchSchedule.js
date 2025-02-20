@@ -7,6 +7,7 @@ import { toNmState, refreeNameState } from "./util/recoild"; // Ensure this path
 import { decryptText } from "./util/encryptionUtils";
 import { getRoundDescription } from "./util/getRoundDescription";
 import { getKindDescription } from "./util/getKindDescription";
+import { useNavigate } from "react-router-dom";
 
 function MatchSchedule() {
   const { api, to_cd, phone_number } = useParams();
@@ -15,12 +16,13 @@ function MatchSchedule() {
   const toNm = useRecoilValue(toNmState);
   const setToNmName = useSetRecoilState(toNmState); // 심판명을 recoil에 저장하여 전역변수처럼 사용
   setToNmName("테스트 대회");
+  const navigate = useNavigate();
 
   const handleTableItemClick = (detailClassCd, rhCd) => {
     const refreeNumber = phone_number;
     const nextLink = `/${api}/${to_cd}/${phone_number}/${detailClassCd}/${rhCd}/${refreeNumber}/${refreeNumber}
     `;
-    window.location.href = nextLink;
+    navigate(nextLink);
   };
 
   const individualMatches = scheduleData.filter(

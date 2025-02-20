@@ -32,8 +32,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "pkg": "pkg --target node14-win-x64 server2.js"
+    "pkg": "pkg --target node14-win-x64 server2.js",
+    "deploy": "gh-pages -d build"
   },
+  "homepage": "https://gillyongs.github.io/ngtos_kg_mark_web/",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -51,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
   }
 }

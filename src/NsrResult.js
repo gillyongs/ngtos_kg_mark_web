@@ -106,7 +106,7 @@ function NsrResult() {
 
   //public 폴더에 저장되어있는 json 파일에서 채점표를 읽어온다
   useEffect(() => {
-    fetch(`/markTable${category}.json`)
+    fetch(`/ngtos_kg_mark_web/markTable${category}.json`)
       .then((response) => response.json())
       .then((json) => {
         const savedData = localStorage.getItem(

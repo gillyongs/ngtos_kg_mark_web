@@ -120,7 +120,7 @@ function NsrResult() {
 
   //public 폴더에 저장되어있는 json 파일에서 채점표를 읽어온다
   useEffect(() => {
-    fetch(`/markTable1.json`)
+    fetch(`/ngtos_kg_mark_web/markTable1.json`)
       .then((response) => response.json())
       .then((json) => {
         const savedData = localStorage.getItem(
@@ -145,7 +145,7 @@ function NsrResult() {
       });
   }, [category, detail_class_cd, rh_cd, refree, index]);
   useEffect(() => {
-    fetch(`/markTable2.json`)
+    fetch(`/ngtos_kg_mark_web/markTable2.json`)
       .then((response) => response.json())
       .then((json) => {
         const savedData = localStorage.getItem(
@@ -169,7 +169,7 @@ function NsrResult() {
       });
   }, [category, detail_class_cd, rh_cd, refree, index]);
   useEffect(() => {
-    fetch(`/markTable3.json`)
+    fetch(`/ngtos_kg_mark_web/markTable3.json`)
       .then((response) => response.json())
       .then((json) => {
         const savedData = localStorage.getItem(
