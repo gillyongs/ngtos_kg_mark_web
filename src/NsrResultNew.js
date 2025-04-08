@@ -190,19 +190,19 @@ function NsrResult() {
     if (nsrResult.markBaseId === -7) return;
     if (Object.keys(nsrResult.selectedCells).length === 0) return;
     localStorage.setItem(`nsrResult1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, JSON.stringify(nsrResult.selectedCells)); // localStorage 저장
-    localStorage.setItem(`score1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(calculateTotal(nsrResult.selectedCells)));
+    localStorage.setItem(`score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(totalScore));
   }, [nsrResult.selectedCells]);
   useEffect(() => {
     if (nsrResult2.markBaseId === -7) return;
     if (Object.keys(nsrResult2.selectedCells).length === 0) return;
     localStorage.setItem(`nsrResult2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, JSON.stringify(nsrResult2.selectedCells)); // localStorage 저장
-    localStorage.setItem(`score2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(calculateTotal(nsrResult2.selectedCells)));
+    localStorage.setItem(`score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(totalScore));
   }, [nsrResult2.selectedCells]);
   useEffect(() => {
     if (nsrResult3.markBaseId === -7) return;
     if (Object.keys(nsrResult3.selectedCells).length === 0) return;
     localStorage.setItem(`nsrResult3/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, JSON.stringify(nsrResult3.selectedCells)); // localStorage 저장
-    localStorage.setItem(`score3/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(calculateTotal(nsrResult3.selectedCells)));
+    localStorage.setItem(`score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(totalScore));
   }, [nsrResult3.selectedCells]);
   //#endregion
   //#region teamCount

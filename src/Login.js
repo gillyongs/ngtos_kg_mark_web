@@ -16,14 +16,14 @@ const Refree = () => {
   const handleLoginClick = () => {
     // 로그인버튼 클릭시 db 조회
     setRefreeName("김한수"); // 심판명 저장
-    const nextLink = `/${api}/${to_cd}/${phoneNumber}`; //전화번호 암호화
+    const nextLink = `/${api}/${to_cd}/1`; //전화번호 암호화
     navigate(nextLink);
   };
 
   const handlePhoneNumberChange = (e) => {
     // input창에 숫자만 입력되게 필터링 후 phoeNumber에 저장
     const formattedPhoneNumber = e.target.value.replace(/\D/g, ""); //숫자만 입력 가능
-    setPhoneNumber(1);
+    setPhoneNumber(formattedPhoneNumber);
   };
 
   return (

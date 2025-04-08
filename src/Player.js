@@ -10,11 +10,9 @@ import { getKindDescription } from "./util/getKindDescription";
 import { useNavigate } from "react-router-dom";
 
 function Player() {
-  const { api, to_cd, phone_number, detail_class_cd, rh_cd, refree, category } =
-    useParams();
+  const { api, to_cd, phone_number, detail_class_cd, rh_cd, refree, category } = useParams();
   const playerData = defaultPlayerData;
-  const [recoilPlayerData, setRecoilPlayerData] =
-    useRecoilState(playerDataState); // 선수 목록을 recoil을 통해 저장
+  const [recoilPlayerData, setRecoilPlayerData] = useRecoilState(playerDataState); // 선수 목록을 recoil을 통해 저장
   setRecoilPlayerData(playerData);
   const refreeName = useRecoilValue(refreeNameState);
   const navigate = useNavigate();
@@ -74,9 +72,7 @@ function Player() {
     <>
       <BackBar
         url={`/${api}/${to_cd}/${phone_number}`} // 화살표 누르면 돌아가는 url 주소
-        text={`${refreeName} 심판 // ${getKindDescription(
-          Math.floor(detail_class_cd / 100) % 10
-        )} ${getRoundDescription(rh_cd)}`}
+        text={`${refreeName} 심판 // ${getKindDescription(Math.floor(detail_class_cd / 100) % 10)} ${getRoundDescription(rh_cd)}`}
       />
       <div className="player-container">
         <div className="empty_space"></div>
@@ -100,62 +96,26 @@ function Player() {
               (result, index) =>
                 result.rh_cd === rh_cd && //
                 (refree !== "0" ? (
-                  <tr
-                    key={result.ID}
-                    onClick={() =>
-                      navigate(
-                        `/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${refree}/${index}`
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
+                  <tr key={result.ID} onClick={() => navigate(`/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${refree}/${index}`)} style={{ cursor: "pointer" }}>
                     <td>{result.start_no}</td>
-                    <td>{result.NM}</td>
-                    <td>
-                      {localStorage.getItem(
-                        `score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${result.start_no}`
-                      ) || 0}
-                    </td>
+                    {detail_class_cd % 2 !== 0 && <td>{result.NM}</td>}
+                    {detail_class_cd % 2 === 0 && <td>{result.NM}팀</td>}
+                    <td>{localStorage.getItem(`score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${result.start_no}`) || 0}</td>
                   </tr>
                 ) : (
-                  <tr
-                    key={result.ID}
-                    onClick={() =>
-                      navigate(
-                        `/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${refree}/${index}`
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
+                  <tr key={result.ID} onClick={() => navigate(`/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${refree}/${index}`)} style={{ cursor: "pointer" }}>
                     <td>{result.start_no}</td>
                     <td>{result.NM}</td>
-                    <td>
-                      {" "}
-                      {localStorage.getItem(
-                        `score1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${result.start_no}`
-                      ) || 0}
-                    </td>
-                    <td>
-                      {" "}
-                      {localStorage.getItem(
-                        `score2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${result.start_no}`
-                      ) || 0}
-                    </td>
-                    <td>
-                      {" "}
-                      {localStorage.getItem(
-                        `score3/${detail_class_cd}/${rh_cd}/${refree}/${category}/${result.start_no}`
-                      ) || 0}
-                    </td>
+                    <td> {localStorage.getItem(`score1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${result.start_no}`) || 0}</td>
+                    <td> {localStorage.getItem(`score2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${result.start_no}`) || 0}</td>
+                    <td> {localStorage.getItem(`score3/${detail_class_cd}/${rh_cd}/${refree}/${category}/${result.start_no}`) || 0}</td>
                   </tr>
                 ))
             )}
           </tbody>
         </table>
         <br></br>
-        {playerData.length === 0 && (
-          <h4>스타트리스트가 생성되지 않았습니다.</h4>
-        )}
+        {playerData.length === 0 && <h4>스타트리스트가 생성되지 않았습니다.</h4>}
       </div>
     </>
   );
