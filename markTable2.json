@@ -5,40 +5,24 @@
       "ID": "1",
       "MID": "2",
       "SEQ_NO": "1",
-      "MARK_CONTENT": "동작과 기운으로 주제를 잘 표현하는가? (의상 포함)",
-      "MAX_POINT": "6",
+      "MARK_CONTENT": "● 부드럽고 강하고, 빠르고 느린 동작들이 리듬감 있게 표현 되는가?",
+      "MAX_POINT": "10",
       "CATEGORY": null
     },
     {
       "ID": "1",
       "MID": "2",
       "SEQ_NO": "2",
-      "MARK_CONTENT": "부드럽고 강하고, 빠르고 느린 동작들이 리듬감 있게 표현되는가?",
-      "MAX_POINT": "6",
+      "MARK_CONTENT": "● 하체의 힘이 단전을 통해 손으로 잘 표현 되는가?",
+      "MAX_POINT": "10",
       "CATEGORY": null
     },
     {
       "ID": "1",
       "MID": "2",
       "SEQ_NO": "3",
-      "MARK_CONTENT": "하체의 힘이 허리를 통해 손으로 잘 표현되는가?",
-      "MAX_POINT": "6",
-      "CATEGORY": null
-    },
-    {
-      "ID": "1",
-      "MID": "2",
-      "SEQ_NO": "4",
-      "MARK_CONTENT": "동작과 음악이 합을 이루는가?",
-      "MAX_POINT": "6",
-      "CATEGORY": null
-    },
-    {
-      "ID": "1",
-      "MID": "2",
-      "SEQ_NO": "5",
-      "MARK_CONTENT": "동작의 연결이 자연스럽고, 역동적인가?",
-      "MAX_POINT": "6",
+      "MARK_CONTENT": "● 동작의 연결이 자연스럽고, 역동적이며, 음악과 합을 이루는가?",
+      "MAX_POINT": "10",
       "CATEGORY": null
     }
   ],
@@ -46,6 +30,6 @@
   "allPoint": 30,
   "maxPoint": "6",
   "categories": [null],
-  "maxCount": 5,
+  "maxCount": 3,
   "isSave": 0
 }

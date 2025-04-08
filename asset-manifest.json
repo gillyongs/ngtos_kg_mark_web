@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/ngtos_kg_mark_web/static/css/main.7ac9fa18.css",
-    "main.js": "/ngtos_kg_mark_web/static/js/main.ff58d54e.js",
+    "main.css": "/ngtos_kg_mark_web/static/css/main.cb91efba.css",
+    "main.js": "/ngtos_kg_mark_web/static/js/main.42253009.js",
     "static/js/453.80efc53e.chunk.js": "/ngtos_kg_mark_web/static/js/453.80efc53e.chunk.js",
     "index.html": "/ngtos_kg_mark_web/index.html",
-    "main.7ac9fa18.css.map": "/ngtos_kg_mark_web/static/css/main.7ac9fa18.css.map",
-    "main.ff58d54e.js.map": "/ngtos_kg_mark_web/static/js/main.ff58d54e.js.map",
+    "main.cb91efba.css.map": "/ngtos_kg_mark_web/static/css/main.cb91efba.css.map",
+    "main.42253009.js.map": "/ngtos_kg_mark_web/static/js/main.42253009.js.map",
     "453.80efc53e.chunk.js.map": "/ngtos_kg_mark_web/static/js/453.80efc53e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.7ac9fa18.css",
-    "static/js/main.ff58d54e.js"
+    "static/css/main.cb91efba.css",
+    "static/js/main.42253009.js"
   ]
 }
