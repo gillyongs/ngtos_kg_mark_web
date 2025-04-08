@@ -5,32 +5,24 @@
       "ID": "1",
       "MID": "3",
       "SEQ_NO": "1",
-      "MARK_CONTENT": "어떤 밝고 강한 에너지로, 어떤 감동을 주는가?",
-      "MAX_POINT": "8",
+      "MARK_CONTENT": "● 주제에 맞게, 어떤 밝고 강한 에너지로, 어떤 감동을 주는가?",
+      "MAX_POINT": "10",
       "CATEGORY": null
     },
     {
       "ID": "1",
       "MID": "3",
       "SEQ_NO": "2",
-      "MARK_CONTENT": "동작과 공연이 살아 움직이는 느낌을 주는가?",
-      "MAX_POINT": "8",
+      "MARK_CONTENT": "● 동작이 매끄럽고 깔끔하며, 공연이 살아 움직이는 느낌을 주는가?",
+      "MAX_POINT": "10",
       "CATEGORY": null
     },
     {
       "ID": "1",
       "MID": "3",
       "SEQ_NO": "3",
-      "MARK_CONTENT": "동작이 매끄럽고 깔끔한가?",
-      "MAX_POINT": "7",
-      "CATEGORY": null
-    },
-    {
-      "ID": "1",
-      "MID": "3",
-      "SEQ_NO": "4",
-      "MARK_CONTENT": "안정된 난이도 있는 동작을 하는가? (예: 강한 수퇴법의 연속 동작, 두가지 이상의 다른 동작, 낮은 자세, 난이도 있는 동작들)",
-      "MAX_POINT": "7",
+      "MARK_CONTENT": "● 안정된 난이도 있는 동작을 하는가? (예: 강한 수퇴법의 연속동작, 두 가지 이상의 다른 동작, 낮은 자세, 난이도 있는 동작들)",
+      "MAX_POINT": "10",
       "CATEGORY": null
     }
   ],
@@ -38,6 +30,6 @@
   "allPoint": 30,
   "maxPoint": "8",
   "categories": [null],
-  "maxCount": 4,
+  "maxCount": 3,
   "isSave": 0
 }

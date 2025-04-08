@@ -7,6 +7,9 @@
   }
 */
 .nsr-result-container {
+  width: 95%;
+  margin: 0 auto; /* 💡 이게 핵심 */
+  border-collapse: collapse;
   text-align: center;
 }
 
@@ -132,7 +135,7 @@ body {
 
 th,
 td {
-  border: 1px solid #a1a1a1;
+  border: 1px solid #272323;
   padding: 8px;
 }
 
@@ -170,6 +173,13 @@ th {
   margin: 20px auto; /* 중앙 정렬 및 위아래 여백 */
 }
 
+.table-container-new {
+  justify-content: space-between;
+  width: 95%;
+  margin: 0 auto; /* 중앙 정렬 및 위아래 여백 */
+  font-size: 18px;
+}
+
 .nsr-result-container .table-container td.selected {
   background: rgba(255, 192, 203, 0.5);
 }
@@ -190,9 +200,7 @@ th {
   flex: 1; /* 동일한 너비 유지 */
   margin: 0 5px; /* 버튼 간 간격 유지 */
   background-color: rgb(250, 0, 0); /* 버튼 배경을 빨간색으로 설정 */
-  height: calc(
-    var(--button-height, 40px) * 3
-  ); /* 높이를 3배로 설정 (기본값 40px) */
+  height: calc(var(--button-height, 40px) * 3); /* 높이를 3배로 설정 (기본값 40px) */
 }
 
 .save-button {
@@ -220,4 +228,38 @@ th {
 
 .selectedk {
   background-color: lightgray; /* 원하는 색상으로 변경 가능 */
+}
+
+/* 크롬, 사파리 (웹킷 브라우저) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* 파이어폭스 */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.mark-table td {
+  padding: 0px 4px;
+  font-size: 17px;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+.custom-td {
+  width: 8vw !important;
+}
+
+.blinking-cursor {
+  display: inline-block;
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }

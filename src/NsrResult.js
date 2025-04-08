@@ -15,24 +15,12 @@ import BackBar from "./component/BackBar";
 
 const calculateTotal = (selectedCells) => {
   //선택된 셀들의 총합
-  return Object.values(selectedCells).reduce(
-    (total, value) => total + (value ? value : 0),
-    0
-  );
+  return Object.values(selectedCells).reduce((total, value) => total + (value ? value : 0), 0);
 };
 
 function NsrResult() {
   //#region params
-  const {
-    api,
-    to_cd,
-    phone_number,
-    detail_class_cd,
-    rh_cd,
-    refree,
-    category,
-    index,
-  } = useParams();
+  const { api, to_cd, phone_number, detail_class_cd, rh_cd, refree, category, index } = useParams();
   const kind_cd = Math.floor((detail_class_cd % 1000) / 100);
 
   const [params, setParams] = useState({});
@@ -49,16 +37,7 @@ function NsrResult() {
       index: index,
       kind_cd: Math.floor((detail_class_cd % 1000) / 100),
     }));
-  }, [
-    api,
-    to_cd,
-    phone_number,
-    detail_class_cd,
-    rh_cd,
-    refree,
-    category,
-    index,
-  ]);
+  }, [api, to_cd, phone_number, detail_class_cd, rh_cd, refree, category, index]);
   //#endregion
   //#region playerData
   const playersData = useRecoilValue(playerDataState);
@@ -113,33 +92,21 @@ function NsrResult() {
           // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
           `nsrResult/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
         );
-        if (
-          savedData &&
-          refree === "1" &&
-          countValidScores(JSON.parse(savedData)) === 12
-        ) {
+        if (savedData && refree === "1" && countValidScores(JSON.parse(savedData)) === 12) {
           setNsrResult((prev) => ({
             ...prev,
             ...json,
             selectedCells: savedData ? JSON.parse(savedData) : {},
             isSave: 1,
           }));
-        } else if (
-          savedData &&
-          refree === "2" &&
-          countValidScores(JSON.parse(savedData)) === 5
-        ) {
+        } else if (savedData && refree === "2" && countValidScores(JSON.parse(savedData)) === 5) {
           setNsrResult((prev) => ({
             ...prev,
             ...json,
             selectedCells: savedData ? JSON.parse(savedData) : {},
             isSave: 1,
           }));
-        } else if (
-          savedData &&
-          refree === "3" &&
-          countValidScores(JSON.parse(savedData)) === 4
-        ) {
+        } else if (savedData && refree === "3" && countValidScores(JSON.parse(savedData)) === 4) {
           setNsrResult((prev) => ({
             ...prev,
             ...json,
@@ -160,16 +127,8 @@ function NsrResult() {
   useEffect(() => {
     if (nsrResult.markBaseId === -7) return;
     if (Object.keys(nsrResult.selectedCells).length === 0) return;
-    localStorage.setItem(
-      `nsrResult/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`,
-      JSON.stringify(nsrResult.selectedCells)
-    ); // localStorage 저장
-    localStorage.setItem(
-      `score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${
-        (index % 6) + 1
-      }`,
-      JSON.stringify(calculateTotal(nsrResult.selectedCells))
-    );
+    localStorage.setItem(`nsrResult/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, JSON.stringify(nsrResult.selectedCells)); // localStorage 저장
+    localStorage.setItem(`score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(calculateTotal(nsrResult.selectedCells)));
   }, [nsrResult.selectedCells]);
   //#endregion
   //#region teamCount
@@ -184,19 +143,14 @@ function NsrResult() {
 
   useEffect(() => {
     if (teamCount < 1) return;
-    localStorage.setItem(
-      `teamCount/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`,
-      teamCount
-    ); // localStorage 저장
+    localStorage.setItem(`teamCount/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, teamCount); // localStorage 저장
   }, [teamCount]);
   //#endregion
   //#region etc
   const refreeName = useRecoilValue(refreeNameState);
   const backBar = {
     url: `/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${category}`,
-    text: `${refreeName} 심판 // ${getKindDescription(
-      kind_cd
-    )} ${getRoundDescription(rh_cd)}`,
+    text: `${refreeName} 심판 // ${getKindDescription(kind_cd)} ${getRoundDescription(rh_cd)}`,
   };
 
   const [isSaveFinal, setIsSaveFinal] = useState(false); // 인원수와 각각의 채점 상태를 총괄하여 최종 저장 여부를 나타내는 state
@@ -216,18 +170,21 @@ function NsrResult() {
   }, [playerData, params]);
 
   const countValidScores = (selectedCells) => {
-    return Object.values(selectedCells).filter(
-      (value) => typeof value === "number" && value > 0
-    ).length;
+    return Object.values(selectedCells).filter((value) => typeof value === "number" && value > 0).length;
   };
+
+  const [keyboardState, setKeyboardState] = useState({
+    show: false,
+    category: null,
+    index: null,
+    targetId: null,
+    value: "",
+    state: null,
+  });
   //#endregion
   return (
-    <div className="nsr-result-container">
-      <BackBar
-        url={backBar.url}
-        text={backBar.text}
-        sentialDigit={!isSaveFinal}
-      />
+    <div className="nsr-result-container" onClick={() => setKeyboardState((prev) => ({ ...prev, show: false, category: null, index: null }))}>
+      <BackBar url={backBar.url} text={backBar.text} sentialDigit={!isSaveFinal} />
       <h1>{playerData.korNm}</h1>
 
       {/*인원수 체크 영역. 단체전에서만 나옴 */}
@@ -236,23 +193,10 @@ function NsrResult() {
           <TeamCountInput teamCount={teamCount} setTeamCount={setTeamCount} />
         </div>
       )}
-      <TableContainer
-        nsrResult={nsrResult}
-        category={category}
-        setNsrResult={setNsrResult}
-        params={params}
-        playerData={playerData}
-      />
+      <TableContainer nsrResult={nsrResult} category={category} setNsrResult={setNsrResult} params={params} playerData={playerData} />
       <table>
         <tbody>
-          <FinalButton
-            selectedCells={countValidScores(nsrResult.selectedCells)}
-            nextPlayerData={nextPlayerData}
-            teamCount={teamCount}
-            params={params}
-            isSaveFinal={isSaveFinal}
-            maxCount={nsrResult.maxCount}
-          />
+          <FinalButton selectedCells={countValidScores(nsrResult.selectedCells)} nextPlayerData={nextPlayerData} teamCount={teamCount} params={params} isSaveFinal={isSaveFinal} maxCount={nsrResult.maxCount} />
         </tbody>
       </table>
     </div>

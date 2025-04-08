@@ -1,44 +1,24 @@
 // App.js
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./Login";
 import MatchSchedule from "./MatchSchedule"; //경기일정
 import Player from "./Player"; //스타트리스트
-import NsrResult from "./NsrResult"; //경기결과
-import NsrResultKing from "./NsrResultKing"; //경기결과
+import NsrResult from "./NsrResultNew"; //경기결과
+import NsrResultKing from "./NsrResultNew"; //경기결과
 
 function App() {
   return (
     <div className="App">
       <Router basename="ngtos_kg_mark_web">
         <Routes>
-          <Route
-            path="/"
-            element={<Navigate to="/localhost/2024test/login" />}
-          />
+          <Route path="/" element={<Navigate to="/localhost/2024test/login" />} />
           <Route path="/:api/:to_cd/login" element={<Login />} />
-          <Route
-            path="/:api/:to_cd/:phone_number"
-            element={<MatchSchedule />}
-          />
-          <Route
-            path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/:refree/:category"
-            element={<Player />}
-          />
-          <Route
-            path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/:refree/:category/:index"
-            element={<NsrResult />}
-          />
-          <Route
-            path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/0/:category/:index"
-            element={<NsrResultKing />}
-          />
+          <Route path="/:api/:to_cd/:phone_number" element={<MatchSchedule />} />
+          <Route path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/:refree/:category" element={<Player />} />
+          <Route path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/:refree/:category/:index" element={<NsrResult />} />
+          <Route path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/0/:category/:index" element={<NsrResultKing />} />
           {/*
           api : 대회 운영 pc 로컬 아이피
           to_cd : 진행중인 대회 코드

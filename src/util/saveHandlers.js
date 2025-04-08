@@ -1,12 +1,6 @@
 // saveHandlers.js
 
-export const saveNsrResultMark = async ({
-  params,
-  playerData,
-  nsrResult,
-  rowId,
-  value,
-}) => {
+export const saveNsrResultMark = async ({ params, playerData, nsrResult, rowId, value }) => {
   const { api } = params;
   // 점수 초기화할때 개별 점수 저장
   try {
@@ -98,38 +92,55 @@ export const saveNsrResult = async ({ params, playerData, score }) => {
 //============================================================================================
 //============================================================================================
 
-export const saveNsrResultPlayerCnt = async ({
-  params,
-  playerData,
-  teamCount,
-}) => {
+export const saveNsrResultPlayerCnt = async ({ params, playerData, teamCount }) => {
   const { api, to_cd, kind_cd, detail_class_cd, rh_cd, refree } = params;
   const entrant_team_id = playerData.entrantTeamId;
-  if (
-    entrant_team_id === -7 ||
-    entrant_team_id === undefined ||
-    entrant_team_id === null
-  )
-    return;
+  if (entrant_team_id === -7 || entrant_team_id === undefined || entrant_team_id === null) return;
   // 실제 인원수 db에 저장
   try {
-    const response = await fetch(
-      `http://${api}:4000/update-nsrresult_player_cnt/`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jid: `JID_CNT${refree}`,
-          count: teamCount,
-          params: params,
-          playerData: playerData,
-        }),
-      }
-    );
+    const response = await fetch(`http://${api}:4000/update-nsrresult_player_cnt/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jid: `JID_CNT${refree}`,
+        count: teamCount,
+        params: params,
+        playerData: playerData,
+      }),
+    });
     if (!response.ok) {
       throw new Error("Failed to save nsrresult_teamplayer_count");
+    }
+  } catch (error) {
+    console.error("Error saving nsrresult:", error);
+  }
+};
+
+//============================================================================================
+//============================================================================================
+//============================================================================================
+
+export const saveNsrResultNew = async ({ params, playerData, score }) => {
+  const { api, refree, category } = params;
+  // 채점 점수 db에 저장
+  try {
+    const response = await fetch(`http://${api}:4000/update-nsrresult/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        mars: "MARS_JP" + refree, // 점수를 넣을 column 위치
+        score: score, // 총합 점수
+        params: params,
+        playerData: playerData,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to save nsrresult");
     }
   } catch (error) {
     console.error("Error saving nsrresult:", error);

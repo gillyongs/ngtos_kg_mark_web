@@ -2,16 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { getRoundDescription } from "../util/getRoundDescription";
 
-const ScoreButtonRow = ({
-  selectedCells,
-  nextPlayerData,
-  teamCount,
-  params,
-  isSaveFinal,
-  maxCount,
-}) => {
-  const { api, to_cd, kind_cd, detail_class_cd, rh_cd, refree, category } =
-    params;
+const ScoreButtonRow = ({ selectedCells, nextPlayerData, teamCount, params, isSaveFinal, maxCount, totalScore }) => {
+  const { api, to_cd, kind_cd, detail_class_cd, rh_cd, refree, category } = params;
   const navigate = useNavigate();
 
   const handleMaxCheck = (nextLink) => {
@@ -32,6 +24,10 @@ const ScoreButtonRow = ({
   return (
     <table>
       <tbody>
+        <tr>
+          <td style={{ fontSize: "30px" }}>총점 {totalScore} / 100</td>
+        </tr>
+
         <tr className="button-row">
           <td colSpan={2} className="button-container1">
             <div
@@ -40,8 +36,7 @@ const ScoreButtonRow = ({
                 justifyContent: "space-between",
                 alignItems: "center",
                 width: "100%",
-              }}
-            >
+              }}>
               {/* 좌측: 채점 항목 */}
               <span
                 style={{
@@ -50,8 +45,7 @@ const ScoreButtonRow = ({
                   justifyContent: "center",
                   alignItems: "center",
                   fontSize: "30px",
-                }}
-              >
+                }}>
                 채점 항목 ({selectedCells}/{maxCount})
               </span>
 
@@ -67,13 +61,9 @@ const ScoreButtonRow = ({
                     textAlign: "center",
                     backgroundColor: isSaveFinal === true ? "green" : "gray",
                     color: "white",
-                  }}
-                >
-                  <div>
-                    다음 {parseInt(detail_class_cd) % 2 === 0 ? "팀" : "선수"}
-                  </div>
-                  {nextPlayerData.name} (
-                  {getRoundDescription(nextPlayerData.rh_cd)})
+                  }}>
+                  <div>다음 {parseInt(detail_class_cd) % 2 === 0 ? "팀" : "선수"}</div>
+                  {nextPlayerData.name} ({getRoundDescription(nextPlayerData.rh_cd)})
                 </button>
               ) : (
                 <button
@@ -83,8 +73,7 @@ const ScoreButtonRow = ({
                     textAlign: "center",
                     backgroundColor: isSaveFinal === true ? "green" : "gray",
                     color: "white",
-                  }}
-                >
+                  }}>
                   <div>채점이 끝났습니다.</div>
                   수고하셨습니다.
                 </button>
