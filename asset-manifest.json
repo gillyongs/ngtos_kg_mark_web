@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/ngtos_kg_mark_web/static/css/main.e737fd3d.css",
-    "main.js": "/ngtos_kg_mark_web/static/js/main.05e71558.js",
+    "main.css": "/ngtos_kg_mark_web/static/css/main.729d9ace.css",
+    "main.js": "/ngtos_kg_mark_web/static/js/main.7b7bc3b5.js",
     "static/js/453.80efc53e.chunk.js": "/ngtos_kg_mark_web/static/js/453.80efc53e.chunk.js",
     "index.html": "/ngtos_kg_mark_web/index.html",
-    "main.e737fd3d.css.map": "/ngtos_kg_mark_web/static/css/main.e737fd3d.css.map",
-    "main.05e71558.js.map": "/ngtos_kg_mark_web/static/js/main.05e71558.js.map",
+    "main.729d9ace.css.map": "/ngtos_kg_mark_web/static/css/main.729d9ace.css.map",
+    "main.7b7bc3b5.js.map": "/ngtos_kg_mark_web/static/js/main.7b7bc3b5.js.map",
     "453.80efc53e.chunk.js.map": "/ngtos_kg_mark_web/static/js/453.80efc53e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e737fd3d.css",
-    "static/js/main.05e71558.js"
+    "static/css/main.729d9ace.css",
+    "static/js/main.7b7bc3b5.js"
   ]
 }
