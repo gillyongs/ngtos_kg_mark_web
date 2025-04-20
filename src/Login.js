@@ -16,7 +16,13 @@ const Refree = () => {
   const handleLoginClick = () => {
     // 로그인버튼 클릭시 db 조회
     setRefreeName("김한수"); // 심판명 저장
-    const nextLink = `/${api}/${to_cd}/1`; //전화번호 암호화
+    let nextLink;
+    if (phoneNumber === "0") {
+      nextLink = `/${api}/${to_cd}/0`;
+    } else {
+      nextLink = `/${api}/${to_cd}/1`;
+    }
+
     navigate(nextLink);
   };
 
@@ -27,17 +33,17 @@ const Refree = () => {
   };
 
   return (
-    <>
-      <div className="login-container">
-        <h2>심판 로그인</h2>
-        <label>
-          <input type="tel" value={phoneNumber} onChange={handlePhoneNumberChange} onKeyDown={(e) => e.key === "Enter" && handleLoginClick()} placeholder="(전화번호를 입력해주세요)" />
-        </label>
+    <div className="login-page">
+      <div className="login-card">
+        <h2 className="login-title">국학기공 심판 로그인</h2>
+        <label htmlFor="phone">전화번호</label>
+        <input type="tel" id="phone" value={phoneNumber} onChange={handlePhoneNumberChange} onKeyDown={(e) => e.key === "Enter" && handleLoginClick()} placeholder="01012345678" />
         <button type="button" onClick={handleLoginClick}>
           로그인
         </button>
+        0 입력시 심사위원장 화면 <br></br> 그 외 입력시 일반 심사위원 화면
       </div>
-    </>
+    </div>
   );
 };
 

@@ -36,98 +36,64 @@ function MatchSchedule() {
 
   return (
     <>
-      <BackBar
-        url={`/${api}/${to_cd}/login`}
-        text={`로그인: ${refreeName}님`}
-      />
-      <div className="match-schedule-container">
-        <h1 class="responsive-title">
-          {toNm} <br></br>경기 일정
-        </h1>
-        <table className="match-schedule-table">
-          <tbody>
-            {individualMatches.length > 0 && ( //개인전이 존재하면 출력
-              <>
-                <tr className="bold-text">
-                  <td colSpan="2">개인전</td>
-                </tr>
+      {" "}
+      <BackBar url={`/${api}/${to_cd}/login`} text={`로그인: ${refreeName}님`} />
+      <div className="match-ui-v3">
+        {individualMatches.length > 0 && (
+          <>
+            <h2 className="match-v3-title"> 개인전</h2>
+            <div className="match-v3-card-container">
+              {Object.entries(
+                individualMatches.reduce((acc, cur) => {
+                  const key = getKindDescription(cur.KIND_CD);
+                  acc[key] = acc[key] || [];
+                  acc[key].push(cur);
+                  return acc;
+                }, {})
+              ).map(([kindName, schedules]) => (
+                <div className="match-v3-card" key={kindName}>
+                  <div className="match-v3-header">{kindName}</div>
+                  <ul className="match-v3-list">
+                    {schedules.map((schedule) => (
+                      <li key={schedule.someUniqueKey} onClick={() => handleTableItemClick(schedule.DETAIL_CLASS_CD, schedule.RH_CD)}>
+                        {getRoundDescription(schedule.RH_CD)}
+                        <span className="go-btn">→</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
-                <tr className="bold-text">
-                  <th>종별</th>
-                  <th>경기</th>
-                </tr>
-                {Object.values(
-                  individualMatches.reduce((acc, schedule) => {
-                    if (!acc[schedule.KIND_CD]) {
-                      acc[schedule.KIND_CD] = [];
-                    }
-                    acc[schedule.KIND_CD].push(schedule);
-                    return acc;
-                  }, {})
-                ).map((schedules) => {
-                  const kindCd = schedules[0].KIND_CD;
-                  return schedules.map((schedule, index) => (
-                    <tr
-                      key={schedule.someUniqueKey}
-                      onClick={() =>
-                        handleTableItemClick(
-                          schedule.DETAIL_CLASS_CD,
-                          schedule.RH_CD
-                        )
-                      }
-                    >
-                      {index === 0 ? (
-                        <td rowSpan={schedules.length}>
-                          {getKindDescription(kindCd)}
-                        </td>
-                      ) : null}
-                      <td>{getRoundDescription(schedule.RH_CD)}</td>
-                    </tr>
-                  ));
-                })}
-              </>
-            )}
-
-            <br />
-
-            {teamMatches.length > 0 && (
-              <>
-                <tr className="bold-text">
-                  <td colSpan="2">단체전</td>
-                </tr>
-                {Object.values(
-                  teamMatches.reduce((acc, schedule) => {
-                    if (!acc[schedule.KIND_CD]) {
-                      acc[schedule.KIND_CD] = [];
-                    }
-                    acc[schedule.KIND_CD].push(schedule);
-                    return acc;
-                  }, {})
-                ).map((schedules) => {
-                  const kindCd = schedules[0].KIND_CD;
-                  return schedules.map((schedule, index) => (
-                    <tr
-                      key={schedule.someUniqueKey}
-                      onClick={() =>
-                        handleTableItemClick(
-                          schedule.DETAIL_CLASS_CD,
-                          schedule.RH_CD
-                        )
-                      }
-                    >
-                      {index === 0 ? (
-                        <td rowSpan={schedules.length}>
-                          {getKindDescription(kindCd)}
-                        </td>
-                      ) : null}
-                      <td>{getRoundDescription(schedule.RH_CD)}</td>
-                    </tr>
-                  ));
-                })}
-              </>
-            )}
-          </tbody>
-        </table>
+        {teamMatches.length > 0 && (
+          <>
+            <h2 className="match-v3-title"> 단체전</h2>
+            <div className="match-v3-card-container">
+              {Object.entries(
+                teamMatches.reduce((acc, cur) => {
+                  const key = getKindDescription(cur.KIND_CD);
+                  acc[key] = acc[key] || [];
+                  acc[key].push(cur);
+                  return acc;
+                }, {})
+              ).map(([kindName, schedules]) => (
+                <div className="match-v3-card" key={kindName}>
+                  <div className="match-v3-header">{kindName}</div>
+                  <ul className="match-v3-list">
+                    {schedules.map((schedule) => (
+                      <li key={schedule.someUniqueKey} onClick={() => handleTableItemClick(schedule.DETAIL_CLASS_CD, schedule.RH_CD)}>
+                        {getRoundDescription(schedule.RH_CD)}
+                        <span className="go-btn">→</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </>
   );

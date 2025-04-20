@@ -1,78 +1,80 @@
-/* MatchSchedule.css */
-.match-schedule-container {
-  text-align: center;
-  margin: 15px;
-  font-size: 25px;
+.match-ui-v3 {
+  padding: 48px 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafc;
+  min-height: 100vh;
 }
 
-.match-schedule-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+.match-v3-title {
+  font-size: 38px; /* 기존 34px → 38px */
+  font-weight: 800;
+  margin: 50px 0 30px;
+  color: #1e2a38;
+  border-left: 6px solid #2980b9;
+  padding-left: 14px;
 }
 
-.match-schedule-table th,
-.match-schedule-table td {
-  border: 1px solid #ababab;
-  padding: 20px;
-  text-align: left;
+.match-v3-card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
 }
 
-.match-schedule-table th {
-  background-color: #f2f2f2;
+.match-v3-card {
+  background: linear-gradient(145deg, #ffffff, #f0f3f7);
+  border-radius: 22px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-td.bold-text {
-  font-weight: bold;
-  padding: 10px; /* Adjust the padding as needed */
-  font-size: 16px; /* Adjust the font size as needed */
+.match-v3-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-tbody tr.bold-text td {
-  font-weight: bold;
-  padding: 10px; /* Adjust the padding as needed */
-  font-size: 26px; /* Adjust the font size as needed */
-}
-
-/* Add the following media query for mobile devices */
-@media only screen and (max-width: 767px) {
-  .match-schedule-table td.bold-text {
-    font-weight: bold;
-    padding: 10px; /* Adjust the padding as needed */
-    font-size: 16px; /* Adjust the font size as needed */
-  }
-
-  tbody tr.bold-text td {
-    font-weight: bold;
-    padding: 10px; /* Adjust the padding as needed */
-    font-size: 26px; /* Adjust the font size as needed */
-  }
-}
-
-.responsive-title {
-  font-size: 2.5rem; /* 기본 글자 크기 */
-  line-height: 1.2; /* 줄 간격 */
-  word-wrap: break-word; /* 길이가 길 경우 줄바꿈 */
-  text-align: center; /* 가운데 정렬 */
-  margin: 0; /* 여백 제거 */
-  margin-top: 30px;
+.match-v3-header {
+  font-size: 26px; /* 기존 24px → 26px */
+  font-weight: 700;
   margin-bottom: 20px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 12px;
+  color: #2c3e50;
 }
 
-@media (max-width: 768px) {
-  .responsive-title {
-    font-size: 1.8rem; /* 태블릿에서 글자 크기 축소 */
-    line-height: 1.3;
-    margin-top: 30px;
-    margin-bottom: 20px;
-  }
+.match-v3-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-@media (max-width: 480px) {
-  .responsive-title {
-    font-size: 1.5rem; /* 모바일에서 글자 크기 더 축소 */
-    line-height: 1.4;
-    margin-top: 30px;
-    margin-bottom: 20px;
-  }
+.match-v3-list li {
+  padding: 18px 16px;
+  font-size: 21px; /* 기존 19px → 21px */
+  color: #2f3e4d;
+  border-bottom: 1px solid #e0e6ed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  transition: background 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.match-v3-list li:hover {
+  background-color: #eaf3fb;
+  transform: translateX(4px);
+}
+
+.go-btn {
+  font-size: 24px; /* 기존 22px → 24px */
+  font-weight: bold;
+  color: #3498db;
+  transition: transform 0.2s ease;
+}
+
+.match-v3-list li:hover .go-btn {
+  transform: translateX(2px);
 }

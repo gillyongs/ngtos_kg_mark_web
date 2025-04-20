@@ -6,30 +6,33 @@ const BackBar = ({ url, text, sentialDigit }) => {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: "5px",
     borderBottom: "1px solid #ccc",
   };
 
   const arrowStyle = {
     margin: "0",
-    marginTop: "-5px",
+    padding: "0",
     cursor: "pointer",
-    transform: "scale(0.9)", // 크기를 0.9배로 줄임
-    transformOrigin: "center", // 크기 조정 기준점 (중앙 기준)
+    fontSize: "50px", // 줄여서 높이 맞춤
+    lineHeight: "1", // 높이 맞춤
+    display: "flex",
+    alignItems: "center",
+    marginLeft: "20px", // ← 왼쪽 여백 추가
   };
 
   const refreeNameStyle = {
-    textAlign: "center", // 가운데 정렬
-    flexGrow: 1, // h2 요소가 가운데로 오도록 flexGrow 추가
-    marginRight: "27px", // 오른쪽 마진 추가
+    textAlign: "center",
+    flexGrow: 1,
+    marginRight: "75px",
+    fontSize: "25px", // 기존보다 키움
+    fontWeight: "600",
+    color: "#2c3e50",
   };
 
   const navigate = useNavigate();
   const handleResetMove = (nextLink) => {
     if (sentialDigit) {
-      const isConfirmed = window.confirm(
-        "평점 합계나 인원수가 저장되지 않았습니다. 이동하시겠습니까?"
-      );
+      const isConfirmed = window.confirm("채점이 완료되지 않았습니다. 이동하시겠습니까?");
       if (!isConfirmed) {
         return;
       }

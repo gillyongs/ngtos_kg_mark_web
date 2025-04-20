@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { saveNsrResultMark } from "../util/saveHandlers";
 import Keyboard from "./Keyboard";
-const TableContainer = ({ keyboardState, setKeyboardState, nsrResult, category, setNsrResult, params, playerData }) => {
+
+const TableContainer = ({ fontSize, keyboardState, setKeyboardState, nsrResult, category, setNsrResult, params, playerData, onNext, onPrev, end }) => {
   const getCategory = (category) => {
     switch (parseInt(category)) {
       case 1:
@@ -16,139 +17,138 @@ const TableContainer = ({ keyboardState, setKeyboardState, nsrResult, category, 
   };
 
   const handleKeyboardInput = (inputValue) => {
-    const validPattern = /^$|^\.$|^\.\d$|^\d$|^\d{2}$|^\d\.$|^\d\.\d$/;
-
+    // 유효한 입력 패턴: 1 ~ 10 또는 1.0 ~ 9.9
+    const validPattern = /^$|^\d$|^\d{2}$|^\d\.$|^\d\.\d$/;
     let value;
     const prevValue = String(keyboardState.value);
+
     if (inputValue === "backspace") {
+      value = keyboardState.state === "focus" ? "" : prevValue.slice(0, -1);
       if (keyboardState.state === "focus") {
-        value = "";
-        setKeyboardState((prev) => ({
-          ...prev,
-          state: "edit",
-        }));
-      } else {
-        value = prevValue.slice(0, -1); // 마지막 글자 제거
+        setKeyboardState((prev) => ({ ...prev, state: "edit" }));
       }
     } else {
+      value = keyboardState.state === "focus" ? inputValue : prevValue + inputValue;
       if (keyboardState.state === "focus") {
-        value = inputValue;
-        setKeyboardState((prev) => ({
-          ...prev,
-          state: "edit",
-        }));
-      } else {
-        value = prevValue + inputValue;
+        setKeyboardState((prev) => ({ ...prev, state: "edit" }));
       }
     }
 
     const dotCount = (value.match(/\./g) || []).length;
     const digitCount = (value.match(/\d/g) || []).length;
 
-    if (dotCount >= 2 || digitCount >= 3) {
-      return; // 조건에 맞으면 아무 작업도 하지 않음
-    }
+    if (dotCount >= 2 || digitCount >= 3) return;
 
+    // 입력값 숫자 변환 후 1 미만이면 리턴
+    const numericValue = parseFloat(value);
+    if (numericValue < 1) alert("최저 점수는 1점입니다.");
+    if (!isNaN(numericValue) && numericValue < 1) return;
+
+    // 10점 예외 처리
     if (value === "10") {
-      //10일 경우 우선 처리
       handleCellClick(keyboardState.targetId, value, nsrResult.selectedCells);
-      setKeyboardState((prev) => ({
-        ...prev,
-        value: value,
-      }));
+      setKeyboardState((prev) => ({ ...prev, value }));
       return;
     }
 
+    // 두 자리 숫자 → 자동 소수점 환산 (예: 87 → 8.7)
     if (value.match(/^\d{2}$/)) {
-      // 숫자 두자리 입력시 자동 소수점 반영
-      let num = parseFloat(value);
-      num = parseFloat((num / 10).toFixed(1));
+      let num = parseFloat((parseFloat(value) / 10).toFixed(1));
+      if (num < 1) return; // 자동 변환 후 1 미만이면 무효
       value = num;
       handleCellClick(keyboardState.targetId, num, nsrResult.selectedCells);
-      setKeyboardState((prev) => ({
-        ...prev,
-        value: value,
-      }));
+      setKeyboardState((prev) => ({ ...prev, value }));
       return;
     }
 
-    if (value === ".") value = "0."; //.부터 입력한 경우
-    if (value.match(/^\.\d$/)) value = "0" + value;
+    // 더 이상 "."이나 ".5" 같은 보정은 제거
+    // if (value === ".") value = "0.";
+    // if (value.match(/^\.\d$/)) value = "0" + value;
 
     if (!validPattern.test(value)) {
-      setKeyboardState({ show: false, targetId: null, value: value });
+      setKeyboardState({ show: false, targetId: null, value });
       return;
     }
 
-    setKeyboardState((prev) => ({
-      ...prev,
-      value: value,
-    }));
+    if (!isNaN(numericValue) && numericValue < 1) return;
 
+    setKeyboardState((prev) => ({ ...prev, value }));
     handleCellClick(keyboardState.targetId, value, nsrResult.selectedCells);
-
-    // console.log("e");
-
-    // handleCellClick(keyboardState.targetId, value, nsrResult.selectedCells);
-    // setKeyboardState({ show: false, targetId: null, value: value });
   };
 
   const handleCellClick = (rowId, value, selectedCells) => {
-    let newSelectedCells = { ...selectedCells };
-    if (!value) {
-      newSelectedCells[rowId] = value;
-    } else {
-      newSelectedCells[rowId] = Number(value);
-    }
+    const newSelectedCells = { ...selectedCells, [rowId]: value ? Number(value) : value };
 
     let point = (value * nsrResult.markData[rowId - 1].MAX_POINT) / 10;
-    point = Math.round(point * 10) / 10;
+    point = Math.round(point * 10) / 10 || -1;
 
-    if (point === null || point === undefined || point === "") {
-      point = -1;
-    }
-
-    setNsrResult((prevState) => ({
-      ...prevState,
-      selectedCells: newSelectedCells,
-      isSave: 0,
-    }));
+    setNsrResult((prev) => ({ ...prev, selectedCells: newSelectedCells, isSave: 0 }));
 
     saveNsrResultMark({
-      params: params,
-      playerData: playerData,
-      nsrResult: nsrResult,
-      rowId: rowId,
+      params,
+      playerData,
+      nsrResult,
+      rowId,
       value: point,
     });
 
-    const numericValuesCount = Object.values(newSelectedCells).filter((value) => typeof value === "number" && value > 0).length;
-    if (numericValuesCount === nsrResult.maxCount) {
-      setNsrResult((prevState) => ({
-        ...prevState,
-        isSave: 1,
-      }));
+    const count = Object.values(newSelectedCells).filter((v) => typeof v === "number" && v > 0).length;
+    if (count === nsrResult.maxCount) {
+      setNsrResult((prev) => ({ ...prev, isSave: 1 }));
     }
+  };
+
+  const handleScoreCellClick = (index) => {
+    if (end) return;
+    setKeyboardState((prev) => {
+      const isSame = prev.targetId === index + 1 && prev.category === category;
+
+      // 이미 선택된 셀을 다시 클릭한 경우 => 닫기
+      if (isSame) {
+        return {
+          show: false,
+          targetId: null,
+          category: null,
+          value: null,
+          state: null,
+        };
+      }
+
+      // 새로 선택된 셀 => 열기
+      return {
+        show: true,
+        category,
+        targetId: index + 1,
+        value: nsrResult.selectedCells[index + 1]?.toString() || "",
+        state: "focus",
+      };
+    });
   };
 
   return (
     <>
       {nsrResult.categories.length > 1 &&
         nsrResult.categories.map((categories, index) => {
+          const isActiveRow = keyboardState.targetId === index + 1 && keyboardState.category === category;
           const filteredData = nsrResult.markData.filter((item) => item.CATEGORY === categories);
           const totalMaxPoint = filteredData.reduce((sum, item) => sum + Number(item.MAX_POINT), 0);
 
           return (
-            <tr key={index}>
+            <tr
+              key={index}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleScoreCellClick(index);
+              }}>
               {index === 0 && (
-                <td className="text-center" rowSpan={nsrResult.categories.length} style={{ width: "8vw", verticalAlign: "middle" }}>
+                <td className={`table-category-label ${isActiveRow ? "active" : ""}`} rowSpan={nsrResult.categories.length} style={{ fontSize: `${fontSize}px` }}>
                   {getCategory(category)} <br /> ({nsrResult.allPoint}점)
                 </td>
               )}
-              <td className="text-center" style={{ width: "12vw" }}>
+              <td className={`table-subcategory ${isActiveRow ? "active" : ""}`} style={{ fontSize: `${fontSize}px` }}>
                 {categories} <br /> ({totalMaxPoint}점)
               </td>
-              <td style={{ textAlign: "left", width: "60vw" }}>
+              <td className={`table-content ${isActiveRow ? "active" : ""}`} style={{ fontSize: `${fontSize}px` }}>
                 {filteredData.map((item, i) => (
                   <div key={i}>
                     {item.MARK_CONTENT.split(/\r\n|\n|\r/).map((line, j) => (
@@ -157,112 +157,101 @@ const TableContainer = ({ keyboardState, setKeyboardState, nsrResult, category, 
                   </div>
                 ))}
               </td>
-              <td style={{ width: "5vw" }}>10</td>
+              <td className={`table-maxscore ${isActiveRow ? "active" : ""}`} style={{ fontSize: `${fontSize}px` }}>
+                10
+              </td>
               <td
-                style={{
-                  width: "10vw",
-                  textAlign: "center",
-                  fontSize: "20px",
-                  cursor: "pointer",
-                  minHeight: "50px",
-                  padding: "4px",
-                  backgroundColor: keyboardState.targetId === index + 1 && keyboardState.category === category ? "#e0f7fa" : "#ffffff",
-                  border: "1px solid",
-                  borderColor: keyboardState.targetId === index + 1 && keyboardState.category === category ? "#00acc1" : "#777",
-                }}
+                className={`table-score-cell ${isActiveRow ? "active" : ""}`}
+                style={{ fontSize: `${fontSize}px` }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setKeyboardState((prev) => {
-                    const isSameTarget = prev.targetId === index + 1 && prev.category === category;
-                    const newState = isSameTarget && prev.state === "focus" ? "edit" : "focus";
-
-                    return {
-                      show: true,
-                      category,
-                      targetId: index + 1,
-                      value: nsrResult.selectedCells[index + 1]?.toString() || "",
-                      state: newState,
-                    };
-                  });
+                  if (end) {
+                    alert("채점이 완료되어 점수를 수정할 수 없습니다.");
+                    return;
+                  }
+                  handleScoreCellClick(index);
                 }}>
-                {keyboardState.targetId === index + 1 && keyboardState.category === category ? (
-                  <>
-                    {keyboardState.value}
-                    {keyboardState.state === "edit" && <div className="blinking-cursor">I</div>}
-                  </>
-                ) : (
-                  nsrResult.selectedCells[index + 1] ?? ""
-                )}
+                <div
+                  className="cell-wrapper"
+                  style={{
+                    display: "flex",
+                    alignItems: "center", // 세로 가운데 정렬
+                    justifyContent: "center", // 가로 가운데 정렬
+                    minHeight: `${fontSize * 3.7}px`,
+                  }}>
+                  {" "}
+                  {isActiveRow ? (
+                    <>
+                      {keyboardState.value}
+                      {keyboardState.state === "edit" && <div className="blinking-cursor">I</div>}
+                    </>
+                  ) : (
+                    nsrResult.selectedCells[index + 1] ?? ""
+                  )}
+                </div>
               </td>
             </tr>
           );
         })}
 
       {nsrResult.categories.length === 1 &&
-        nsrResult.markData.map((item, index) => (
-          <tr key={index} className="mark-table-body-tr" style={{ height: "10px" }}>
-            {index === 0 && (
-              <td className="text-center" rowSpan={nsrResult.markData.length} style={{ width: "8vw", verticalAlign: "middle" }}>
-                {getCategory(category)} <br /> ({nsrResult.allPoint}점)
+        nsrResult.markData.map((item, index) => {
+          const isActiveRow = keyboardState.targetId === index + 1 && keyboardState.category === category;
+
+          return (
+            <tr
+              key={index}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleScoreCellClick(index);
+              }}>
+              {index === 0 && (
+                <td className={`table-category-label ${isActiveRow ? "active" : ""}`} rowSpan={nsrResult.markData.length} style={{ fontSize: `${fontSize}px` }}>
+                  {getCategory(category)} <br /> ({nsrResult.allPoint}점)
+                </td>
+              )}
+              <td className={`table-single-content ${isActiveRow ? "active" : ""}`} colSpan={2} style={{ fontSize: `${fontSize}px` }}>
+                {item.MARK_CONTENT}
               </td>
-            )}
-            <td className="text-left" colSpan={2} style={{ textAlign: "left", width: "72vw" }}>
-              {item.MARK_CONTENT}
-            </td>
-            <td style={{ width: "5vw" }}>10</td>
-            <td style={{ width: "10vw", padding: 0, border: "none" }}>
-              <div
+              <td className={`table-maxscore ${isActiveRow ? "active" : ""}`} style={{ fontSize: `${fontSize}px` }}>
+                10
+              </td>
+              <td
+                className={`table-score-cell ${isActiveRow ? "active" : ""}`}
+                style={{ fontSize: `${fontSize}px` }}
                 onClick={(e) => {
                   e.stopPropagation();
-
-                  setKeyboardState((prev) => {
-                    const isSameTarget = prev.targetId === index + 1 && prev.category === category;
-                    const newState = isSameTarget && prev.state === "focus" ? "edit" : "focus";
-
-                    return {
-                      show: true,
-                      category,
-                      targetId: index + 1,
-                      value: nsrResult.selectedCells[index + 1]?.toString() || "",
-                      state: newState,
-                    };
-                  });
-                }}
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                  fontSize: "20px",
-                  padding: "4px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  minHeight: "70px",
-                  backgroundColor: keyboardState.targetId === index + 1 && keyboardState.category === category ? "#e0f7fa" : "#ffffff", // ← 기본 흰색
-                  borderTop: "1px solid #999",
-                  borderRight: "1px solid #999",
-                  borderBottom: "1px solid #999",
-                  borderLeft: "none", // 왼쪽 테두리 제거
-                  borderColor: keyboardState.targetId === index + 1 && keyboardState.category === category ? "#00acc1" : "#999", // ← 기본 검정 테두리
-                  boxSizing: "border-box",
+                  if (end) {
+                    alert("채점이 완료되어 점수를 수정할 수 없습니다.");
+                    return;
+                  }
+                  handleScoreCellClick(index);
                 }}>
-                {keyboardState.targetId === index + 1 && keyboardState.category === category ? (
-                  <>
-                    {keyboardState.value}
-                    {keyboardState.state === "edit" && <div className="blinking-cursor">I</div>}
-                  </>
-                ) : (
-                  nsrResult.selectedCells[index + 1] ?? ""
-                )}
-              </div>
-            </td>
-          </tr>
-        ))}
+                <div
+                  className="cell-wrapper"
+                  style={{
+                    display: "flex",
+                    alignItems: "center", // 세로 가운데 정렬
+                    justifyContent: "center", // 가로 가운데 정렬
+                    minHeight: `${fontSize * 3.7}px`,
+                  }}>
+                  {" "}
+                  {isActiveRow ? (
+                    <>
+                      {keyboardState.value}
+                      {keyboardState.state === "edit" && <div className="blinking-cursor">I</div>}
+                    </>
+                  ) : (
+                    nsrResult.selectedCells[index + 1] ?? ""
+                  )}
+                </div>
+              </td>
+            </tr>
+          );
+        })}
 
       {keyboardState.show && keyboardState.category === category && (
-        <div
-          onClick={(e) => e.stopPropagation()} // 클릭 이벤트 상위 전파 방지!
-        >
+        <div onClick={(e) => e.stopPropagation()}>
           <Keyboard
             onClick={(e) => e.stopPropagation()}
             onInput={handleKeyboardInput}
@@ -274,6 +263,8 @@ const TableContainer = ({ keyboardState, setKeyboardState, nsrResult, category, 
                 value: null,
               })
             }
+            onNext={onNext}
+            onPrev={onPrev}
           />
         </div>
       )}

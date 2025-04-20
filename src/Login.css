@@ -1,53 +1,103 @@
-/* Login.css */
-
-.login-container {
-  max-width: 300px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #fff;
-  margin: 0 auto; /* Center-align the container */
-  margin-top: 100px; /* Adjust the top margin as needed */
+/* 배경 + 중앙 정렬 */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* 상단 정렬 */
+  padding-top: 225px; /* 상단 여백 */
+  background: linear-gradient(to right, #eef2f3, #8e9eab);
+  font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
-label {
-  display: block;
-  margin: 10px 0;
-}
-
-input {
+/* 카드형 로그인 박스 */
+.login-card {
+  background-color: white;
+  padding: 4rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 100%;
-  height: 80px;
-  padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 30px;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-/* Add media queries for responsiveness */
-@media (max-width: 768px) {
-  .login-container {
-    /* Add responsive styles as needed */
-  }
-}
-
-h2 {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   text-align: center;
+}
+
+/* 타이틀 */
+.login-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #2c3e50;
+}
+
+/* 라벨 */
+.login-card label {
+  font-size: 25px;
+  font-weight: 600;
+  color: #34495e;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* 인풋 */
+.login-card input[type="tel"] {
+  width: 100%;
+  box-sizing: border-box; /* ✅ 패딩 포함한 너비 계산 */
+  padding: 1.2rem;
+  font-size: 20px;
+  border-radius: 12px;
+  border: 2px solid #bdc3c7;
+  background-color: #f9f9f9;
+}
+
+.login-card input::placeholder {
+  font-size: 18px;
+  color: #aaa;
+}
+
+/* 버튼 */
+.login-card button {
+  padding: 1.2rem;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  background-color: #2980b9;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.login-card button:hover {
+  background-color: #3498db;
+  transform: scale(1.05);
+}
+
+.login-card button:active {
+  background-color: #2471a3;
+  transform: scale(0.98);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .login-title {
+    font-size: 36px;
+  }
+
+  .login-card {
+    padding: 2rem;
+  }
+
+  .login-card label {
+    font-size: 18px;
+  }
+
+  .login-card input[type="tel"] {
+    font-size: 18px;
+  }
+
+  .login-card button {
+    font-size: 20px;
+  }
 }

@@ -18,7 +18,7 @@ function App() {
           <Route path="/:api/:to_cd/:phone_number" element={<MatchSchedule />} />
           <Route path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/:refree/:category" element={<Player />} />
           <Route path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/:refree/:category/:index" element={<NsrResult />} />
-          <Route path="/:api/:to_cd/:phone_number/:detail_class_cd/:rh_cd/0/:category/:index" element={<NsrResultKing />} />
+
           {/*
           api : 대회 운영 pc 로컬 아이피
           to_cd : 진행중인 대회 코드

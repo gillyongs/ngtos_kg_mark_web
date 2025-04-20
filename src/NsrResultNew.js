@@ -16,6 +16,7 @@ import TableContainer from "./component/TableContainerNew";
 import TeamCountInput from "./component/TeamCountInput";
 import FinalButton from "./component/FinalButton";
 import BackBar from "./component/BackBar";
+import ComplianceCheck from "./component/ComplianceCheck";
 
 const calculateTotal = (selectedCells) => {
   //선택된 셀들의 총합
@@ -25,7 +26,6 @@ const calculateTotal = (selectedCells) => {
 function NsrResult() {
   //#region params
   const { api, to_cd, phone_number, detail_class_cd, rh_cd, refree, category, index } = useParams();
-
   const kind_cd = Math.floor((detail_class_cd % 1000) / 100);
 
   const [params, setParams] = useState({});
@@ -186,23 +186,22 @@ function NsrResult() {
   }, [category, detail_class_cd, rh_cd, refree, index]);
 
   //selectedCell이 수정될때마다 로컬 스토리지에 저장한다
+  const [totalScore, setTotalScore] = useState(-7);
   useEffect(() => {
     if (nsrResult.markBaseId === -7) return;
+    if (totalScore === -7) return;
     if (Object.keys(nsrResult.selectedCells).length === 0) return;
     localStorage.setItem(`nsrResult1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, JSON.stringify(nsrResult.selectedCells)); // localStorage 저장
-    localStorage.setItem(`score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(totalScore));
   }, [nsrResult.selectedCells]);
   useEffect(() => {
     if (nsrResult2.markBaseId === -7) return;
     if (Object.keys(nsrResult2.selectedCells).length === 0) return;
     localStorage.setItem(`nsrResult2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, JSON.stringify(nsrResult2.selectedCells)); // localStorage 저장
-    localStorage.setItem(`score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(totalScore));
   }, [nsrResult2.selectedCells]);
   useEffect(() => {
     if (nsrResult3.markBaseId === -7) return;
     if (Object.keys(nsrResult3.selectedCells).length === 0) return;
     localStorage.setItem(`nsrResult3/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, JSON.stringify(nsrResult3.selectedCells)); // localStorage 저장
-    localStorage.setItem(`score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(totalScore));
   }, [nsrResult3.selectedCells]);
   //#endregion
   //#region teamCount
@@ -219,6 +218,104 @@ function NsrResult() {
     if (teamCount < 1) return;
     localStorage.setItem(`teamCount/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, teamCount); // localStorage 저장
   }, [teamCount]);
+  //#endregion
+  //#region keyboard
+  const [keyboardState, setKeyboardState] = useState({
+    show: false,
+    category: null,
+    index: null,
+    targetId: null,
+    value: "",
+    state: null,
+  });
+
+  const onNext = () => {
+    setKeyboardState((prev) => {
+      // 현재 상태를 기반으로 다음 상태 결정
+      let nextCategory = prev.category;
+      let nextTargetId = prev.targetId + 1;
+      let nextValue = "";
+
+      if (prev.category === 1 && prev.targetId === nsrResult.maxCount) {
+        nextCategory = 2;
+        nextTargetId = 1;
+        nextValue = nsrResult2.selectedCells[1]?.toString() || "";
+      } else if (prev.category === 2 && prev.targetId === nsrResult2.maxCount) {
+        nextCategory = 3;
+        nextTargetId = 1;
+        nextValue = nsrResult3.selectedCells[1]?.toString() || "";
+      } else if (prev.category === 3 && prev.targetId === nsrResult3.maxCount) {
+        setKeyboardState({
+          show: false,
+          targetId: null,
+          category: null,
+          value: null,
+        });
+        return;
+      } else {
+        // 기본 증가 로직
+        nextCategory = prev.category;
+        nextTargetId = prev.targetId + 1;
+
+        const targetList = prev.category === 1 ? nsrResult.selectedCells : prev.category === 2 ? nsrResult2.selectedCells : nsrResult3.selectedCells;
+
+        nextValue = targetList[nextTargetId]?.toString() || "";
+      }
+
+      return {
+        ...prev,
+        show: true,
+        category: nextCategory,
+        targetId: nextTargetId,
+        value: nextValue,
+        state: "focus",
+      };
+    });
+  };
+
+  const onPrev = () => {
+    setKeyboardState((prev) => {
+      // 현재 상태를 기반으로 다음 상태 결정
+      let nextCategory = prev.category;
+      let nextTargetId = prev.targetId - 1;
+      let nextValue = "";
+
+      if (prev.category === 3 && prev.targetId === 1) {
+        nextCategory = 2;
+        nextTargetId = nsrResult2.maxCount;
+        nextValue = nsrResult2.selectedCells[nextTargetId]?.toString() || "";
+      } else if (prev.category === 2 && prev.targetId === 1) {
+        nextCategory = 1;
+        nextTargetId = nsrResult.maxCount;
+        nextValue = nsrResult.selectedCells[nextTargetId]?.toString() || "";
+      } else if (prev.category === 1 && prev.targetId === 1) {
+        setKeyboardState({
+          show: false,
+          targetId: null,
+          category: null,
+          value: null,
+        });
+        return;
+      } else {
+        // 기본 증가 로직
+        nextCategory = prev.category;
+        nextTargetId = prev.targetId - 1;
+
+        const targetList = prev.category === 1 ? nsrResult.selectedCells : prev.category === 2 ? nsrResult2.selectedCells : nsrResult3.selectedCells;
+
+        nextValue = targetList[nextTargetId]?.toString() || "";
+      }
+
+      return {
+        ...prev,
+        show: true,
+        category: nextCategory,
+        targetId: nextTargetId,
+        value: nextValue,
+        state: "focus",
+      };
+    });
+  };
   //#endregion
   //#region etc
   const refreeName = useRecoilValue(refreeNameState);
@@ -241,7 +338,6 @@ function NsrResult() {
       .reduce((sum, value, index) => sum + (value * nsrResult.markData[index]?.MAX_POINT) / 10, 0);
   };
 
-  const [totalScore, setTotalScore] = useState(-7);
   useEffect(() => {
     let count = countValidScores(nsrResult.selectedCells) + countValidScores(nsrResult2.selectedCells) + countValidScores(nsrResult3.selectedCells);
     let max = nsrResult.maxCount + nsrResult2.maxCount + nsrResult3.maxCount;
@@ -251,7 +347,50 @@ function NsrResult() {
     if (count === max) {
       saveNsrResultNew({ params, playerData, score });
     }
+    localStorage.setItem(`score/${detail_class_cd}/${rh_cd}/${refree}/${category}/${(index % 6) + 1}`, JSON.stringify(score));
   }, [nsrResult, nsrResult2, nsrResult3]);
+
+  const defaultFontSize = 18;
+  const [fontSize, setFontSize] = useState(defaultFontSize); // 기본값 예: 18px
+  const [end, setEnd] = useState(false); // 기본값 예: 18px
+  useEffect(() => {
+    setEnd(false);
+    const savedData = localStorage.getItem(
+      // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
+      `end/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
+    );
+    setEnd(savedData === "true" ? true : savedData === "false" ? false : null);
+  }, [category, detail_class_cd, rh_cd, refree, index]);
+  const [yn1, setYn1] = useState(null); // 기본값 예: 18px
+  const [yn2, setYn2] = useState(null);
+  useEffect(() => {
+    let savedData = localStorage.getItem(
+      // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
+      `yn1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
+    );
+
+    setYn1(savedData === "true" ? true : savedData === "false" ? false : null);
+
+    savedData = localStorage.getItem(
+      // 로컬 스토리지에 selectedCell이 저장되어 있으면 갖고온다
+      `yn2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`
+    );
+
+    setYn2(savedData === "true" ? true : savedData === "false" ? false : null);
+  }, [category, detail_class_cd, rh_cd, refree, index]);
+
+  useEffect(() => {
+    if (yn1 !== null) {
+      localStorage.setItem(`yn1/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, JSON.stringify(yn1));
+    }
+  }, [yn1]);
+
+  // yn2 변경 시 저장
+  useEffect(() => {
+    if (yn2 !== null) {
+      localStorage.setItem(`yn2/${detail_class_cd}/${rh_cd}/${refree}/${category}/${index}`, JSON.stringify(yn2));
+    }
+  }, [yn2]);
 
   // 인원수와 각각의 채점 상태를 총괄하여 최종 저장 여부를 나타내는 state
   const [isSaveFinal, setIsSaveFinal] = useState(false);
@@ -265,25 +404,33 @@ function NsrResult() {
     if (detail_class_cd % 2 === 0 && (teamCount === 0 || isNaN(teamCount))) {
       setIsSaveFinal(false);
     }
-  }, [teamCount, nsrResult, nsrResult2, nsrResult3]);
+    if (refree === "0" && yn1 !== true && yn1 !== false) {
+      setIsSaveFinal(false);
+    }
+    if (refree === "0" && yn2 !== true && yn2 !== false) {
+      setIsSaveFinal(false);
+    }
+  }, [teamCount, nsrResult, nsrResult2, nsrResult3, yn1, yn2]);
   //#endregion
-
-  const [keyboardState, setKeyboardState] = useState({
-    show: false,
-    category: null,
-    index: null,
-    targetId: null,
-    value: "",
-    state: null,
-  });
-
   return (
     <div className="nsr-result-container" onClick={() => setKeyboardState((prev) => ({ ...prev, show: false, category: null, index: null }))}>
-      <BackBar url={backBar.url} text={backBar.text} sentialDigit={!isSaveFinal} />
-      <h1>{playerData.korNm}</h1>
+      <BackBar url={backBar.url} text={backBar.text} sentialDigit={!end} />
+      <div className="nsr-header">
+        <h1 className="nsr-player-name">
+          {playerData.korNm}
+          {detail_class_cd % 2 === 0 && "팀"}
+        </h1>
+        <div className="nsr-font-buttons">
+          <button onClick={() => setFontSize((prev) => Math.max(prev - 2, 10))}>-</button>
+          <button onClick={() => setFontSize(defaultFontSize)}>기본</button>
+          <button onClick={() => setFontSize((prev) => Math.min(prev + 2, 36))}>+</button>
+        </div>
+      </div>
 
       {/*인원수 체크 영역. 단체전에서만 나옴 */}
+      {detail_class_cd % 2 === 0 && <TeamCountInput end={end} teamCount={teamCount} setTeamCount={setTeamCount} totalScore={totalScore} selectedCells={countValidScores(nsrResult.selectedCells) + countValidScores(nsrResult2.selectedCells) + countValidScores(nsrResult3.selectedCells)} nextPlayerData={nextPlayerData} params={params} isSaveFinal={isSaveFinal} maxCount={nsrResult.maxCount + nsrResult2.maxCount + nsrResult3.maxCount} />}
 
+      {refree === "0" && <ComplianceCheck yn1={yn1} yn2={yn2} setYn1={setYn1} setYn2={setYn2} params={params} end={end} />}
       <table className="mark-table">
         <th style={{ width: "8vw" }}>항목</th>
         <th style={{ width: "12vw" }}></th>
@@ -291,15 +438,12 @@ function NsrResult() {
         <th style={{ width: "5vw" }}>점수</th>
         <th style={{ width: "10vw" }}>채점</th>
         <tbody className="mark-table-body">
-          <TableContainer keyboardState={keyboardState} setKeyboardState={setKeyboardState} nsrResult={nsrResult} category={1} setNsrResult={setNsrResult} params={params} playerData={playerData} />
-          <TableContainer keyboardState={keyboardState} setKeyboardState={setKeyboardState} nsrResult={nsrResult2} category={2} setNsrResult={setNsrResult2} params={params} playerData={playerData} />
-          <TableContainer keyboardState={keyboardState} setKeyboardState={setKeyboardState} nsrResult={nsrResult3} category={3} setNsrResult={setNsrResult3} params={params} playerData={playerData} />
+          <TableContainer end={end} fontSize={fontSize} onPrev={onPrev} onNext={onNext} keyboardState={keyboardState} setKeyboardState={setKeyboardState} nsrResult={nsrResult} category={1} setNsrResult={setNsrResult} params={params} playerData={playerData} />
+          <TableContainer end={end} fontSize={fontSize} onPrev={onPrev} onNext={onNext} keyboardState={keyboardState} setKeyboardState={setKeyboardState} nsrResult={nsrResult2} category={2} setNsrResult={setNsrResult2} params={params} playerData={playerData} />
+          <TableContainer end={end} fontSize={fontSize} onPrev={onPrev} onNext={onNext} keyboardState={keyboardState} setKeyboardState={setKeyboardState} nsrResult={nsrResult3} category={3} setNsrResult={setNsrResult3} params={params} playerData={playerData} />
         </tbody>
       </table>
-
-      {detail_class_cd % 2 === 0 && <TeamCountInput teamCount={teamCount} setTeamCount={setTeamCount} totalScore={totalScore} selectedCells={countValidScores(nsrResult.selectedCells) + countValidScores(nsrResult2.selectedCells) + countValidScores(nsrResult3.selectedCells)} nextPlayerData={nextPlayerData} params={params} isSaveFinal={isSaveFinal} maxCount={nsrResult.maxCount + nsrResult2.maxCount + nsrResult3.maxCount} />}
-
-      {detail_class_cd % 2 !== 0 && <FinalButton teamCount={teamCount} setTeamCount={setTeamCount} totalScore={totalScore} selectedCells={countValidScores(nsrResult.selectedCells) + countValidScores(nsrResult2.selectedCells) + countValidScores(nsrResult3.selectedCells)} nextPlayerData={nextPlayerData} params={params} isSaveFinal={isSaveFinal} maxCount={nsrResult.maxCount + nsrResult2.maxCount + nsrResult3.maxCount} />}
+      <FinalButton yn1={yn1} yn2={yn2} end={end} setEnd={setEnd} keyboardState={keyboardState} teamCount={teamCount} setTeamCount={setTeamCount} totalScore={totalScore} selectedCells={countValidScores(nsrResult.selectedCells) + countValidScores(nsrResult2.selectedCells) + countValidScores(nsrResult3.selectedCells)} nextPlayerData={nextPlayerData} params={params} isSaveFinal={isSaveFinal} maxCount={nsrResult.maxCount + nsrResult2.maxCount + nsrResult3.maxCount} />
     </div>
   );
 }

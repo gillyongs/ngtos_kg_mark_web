@@ -17,6 +17,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  margin-bottom: 0; /* 테이블 아래 여백 제거 */
 }
 
 .big-cell {
@@ -171,6 +172,7 @@ th {
   justify-content: space-between;
   width: 95%;
   margin: 20px auto; /* 중앙 정렬 및 위아래 여백 */
+  margin-bottom: 0; /* 테이블 아래 여백 제거 */
 }
 
 .table-container-new {
@@ -178,6 +180,7 @@ th {
   width: 95%;
   margin: 0 auto; /* 중앙 정렬 및 위아래 여백 */
   font-size: 18px;
+  margin-bottom: 0; /* 테이블 아래 여백 제거 */
 }
 
 .nsr-result-container .table-container td.selected {
@@ -262,4 +265,106 @@ input[type="number"] {
   50% {
     opacity: 0;
   }
+}
+
+.nsr-header {
+  position: relative;
+  display: flex;
+  justify-content: center; /* 가운데 정렬을 위해 */
+  align-items: center;
+  margin: 16px 0;
+}
+
+.nsr-player-name {
+  margin: 0;
+  font-size: 32px; /* 기존보다 키움 */
+  font-weight: bold; /* 필요하면 강조도 가능 */
+}
+
+.nsr-font-buttons {
+  position: absolute;
+  right: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.nsr-font-buttons button {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  text-align: center;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.nsr-font-buttons button:nth-child(1) {
+  font-size: 40px;
+}
+
+.nsr-font-buttons button:nth-child(2) {
+  font-size: 17px;
+}
+
+.nsr-font-buttons button:nth-child(3) {
+  font-size: 30px;
+}
+
+.table-category-label {
+  width: 8vw;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.table-subcategory {
+  width: 12vw;
+  text-align: center;
+}
+
+.table-content {
+  width: 60vw;
+  text-align: left;
+}
+
+.table-maxscore {
+  width: 5vw;
+  text-align: center;
+}
+
+.table-score-cell {
+  width: 10vw;
+  text-align: center;
+  cursor: pointer;
+  padding: 4px;
+  border: 1px solid #777;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+.table-score-cell.active {
+  background-color: #e0f7fa;
+  border-color: #00acc1;
+}
+
+.table-single-content {
+  text-align: left;
+  width: 72vw;
+}
+
+.table-maxscore.active {
+  background-color: #e0f7fa;
+  border-color: #00acc1;
+}
+
+.table-subcategory.active {
+  background-color: #e0f7fa;
+  border-color: #00acc1;
+}
+.table-content.active {
+  background-color: #e0f7fa;
+  border-color: #00acc1;
+}
+.table-single-content.active {
+  background-color: #e0f7fa;
+  border-color: #00acc1;
 }

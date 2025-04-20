@@ -73,29 +73,30 @@ function Player() {
       <BackBar
         url={`/${api}/${to_cd}/${phone_number}`} // 화살표 누르면 돌아가는 url 주소
         text={`${refreeName} 심판 // ${getKindDescription(Math.floor(detail_class_cd / 100) % 10)} ${getRoundDescription(rh_cd)}`}
+        /*  [ㅇㅇㅇ심판 // 예선전 결승]  */
       />
       <div className="player-container">
-        <div className="empty_space"></div>
-        <table border="1">
+        <table className="player-table" border="1">
           <thead>
             <tr>
               <th>No</th>
               <th>{nameOrTeamName(detail_class_cd)}</th>
-              {refree !== "0" && <th>{getHeaderLabel(refree, category)}</th>}
-              {refree === "0" && ( //심사위원장이면 3개 다 출력
+              <th>총점</th>
+              {/* {refree !== "1" && <th>{getHeaderLabel(refree, category)}</th>}
+              {refree === "1" && ( //심사위원장이면 3개 다 출력
                 <>
                   <th>기술성</th>
                   <th>예술성</th>
                   <th>완성도</th>
                 </>
-              )}
+              )} */}
             </tr>
           </thead>
           <tbody>
             {playerData.map(
               (result, index) =>
                 result.rh_cd === rh_cd && //
-                (refree !== "0" ? (
+                (refree !== "dkncfbobs" ? (
                   <tr key={result.ID} onClick={() => navigate(`/${api}/${to_cd}/${phone_number}/${detail_class_cd}/${rh_cd}/${refree}/${refree}/${index}`)} style={{ cursor: "pointer" }}>
                     <td>{result.start_no}</td>
                     {detail_class_cd % 2 !== 0 && <td>{result.NM}</td>}

@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getRoundDescription } from "../util/getRoundDescription";
 
-const ScoreButtonRow = ({ setTeamCount, selectedCells, nextPlayerData, teamCount, params, isSaveFinal, maxCount, totalScore }) => {
+const ScoreButtonRow = ({ setTeamCount, selectedCells, nextPlayerData, teamCount, params, isSaveFinal, maxCount, totalScore, end }) => {
   const { api, to_cd, kind_cd, detail_class_cd, rh_cd, refree, category } = params;
   const navigate = useNavigate();
   const holdIntervalRef = useRef(null);
@@ -13,7 +13,7 @@ const ScoreButtonRow = ({ setTeamCount, selectedCells, nextPlayerData, teamCount
       return;
     }
     if (selectedCells !== maxCount) {
-      window.confirm("채점하지 않은 항목이 존재합니다.");
+      window.confirm("채점하지 않거나 0점인 항목이 존재합니다.");
       return;
     }
 
@@ -32,54 +32,93 @@ const ScoreButtonRow = ({ setTeamCount, selectedCells, nextPlayerData, teamCount
   };
 
   const stopHold = () => clearInterval(holdIntervalRef.current);
+  const inputRef = useRef(null);
 
+  const handleTdClick = () => {
+    inputRef.current?.focus();
+  };
   return (
     <table>
       <tbody>
         <tr>
-          <td colSpan={1} style={{ fontSize: "30px", verticalAlign: "middle" }}>
-            총점 {totalScore} / 100
-          </td>
+          <td>팀 인원수</td>
 
-          {/* 팀 인원수 라벨 + input 수직 정렬 */}
-          <td style={{ padding: "0px" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <label style={{ fontSize: "14px", marginBottom: "4px" }}>팀 인원수</label>
+          <td
+            onClick={handleTdClick}
+            style={{
+              cursor: "pointer",
+              padding: "8px",
+              textAlign: "center",
+            }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center", // 좌우 정렬도 정중앙
+                gap: "8px", // input과 "명" 사이 간격
+              }}>
               <input
+                ref={inputRef}
                 type="number"
                 value={teamCount}
-                onChange={(e) => setTeamCount(parseInt(e.target.value))}
+                onChange={(e) => {
+                  if (end) return;
+                  setTeamCount(parseInt(e.target.value));
+                }}
                 onKeyPress={(e) => {
-                  if (isNaN(parseInt(e.key))) {
+                  if (end || isNaN(parseInt(e.key))) {
                     e.preventDefault();
                   }
                 }}
+                onClick={(e) => {
+                  if (end) return;
+                  e.stopPropagation();
+                }}
+                disabled={end}
                 style={{
-                  width: "80px",
-                  height: "40px", // 정사각형 input
+                  width: "10vw",
+                  height: "8vw",
                   textAlign: "center",
-                  fontSize: "16px",
+                  fontSize: "45px",
                 }}
               />
+
+              <span
+                style={{
+                  fontSize: "30px",
+                  lineHeight: 1,
+                }}>
+                명
+              </span>
             </div>
           </td>
 
           {/* +1 버튼 */}
           <td style={{ padding: "0px" }}>
             <button
-              onMouseDown={() => startHold((v) => v + 1)}
+              disabled={end}
+              onMouseDown={() => {
+                if (end) return;
+                startHold((v) => v + 1);
+              }}
               onMouseUp={stopHold}
               onMouseLeave={stopHold}
-              onTouchStart={() => startHold((v) => v + 1)}
+              onTouchStart={() => {
+                if (end) return;
+                startHold((v) => v + 1);
+              }}
               onTouchEnd={stopHold}
               onTouchCancel={stopHold}
-              onClick={() => setTeamCount((prev) => (isNaN(prev) || prev === null ? 0 : prev) + 1)}
+              onClick={() => {
+                if (end) return;
+                setTeamCount((prev) => (isNaN(prev) || prev === null ? 0 : prev) + 1);
+              }}
               style={{
                 width: "80%",
                 height: "60px",
                 fontSize: "18px",
                 cursor: "pointer",
-                userSelect: "none", // ← 텍스트 선택 비활성화!
+                userSelect: "none",
               }}>
               +1
             </button>
@@ -87,76 +126,32 @@ const ScoreButtonRow = ({ setTeamCount, selectedCells, nextPlayerData, teamCount
 
           <td style={{ padding: "0px" }}>
             <button
-              onMouseDown={() => startHold((v) => Math.max(0, v - 1))}
+              disabled={end}
+              onMouseDown={() => {
+                if (end) return;
+                startHold((v) => Math.max(0, v - 1));
+              }}
               onMouseUp={stopHold}
               onMouseLeave={stopHold}
-              onTouchStart={() => startHold((v) => Math.max(0, v - 1))}
+              onTouchStart={() => {
+                if (end) return;
+                startHold((v) => Math.max(0, v - 1));
+              }}
               onTouchEnd={stopHold}
               onTouchCancel={stopHold}
-              onClick={() => setTeamCount((prev) => Math.max(0, (isNaN(prev) || prev === null ? 0 : prev) - 1))}
+              onClick={() => {
+                if (end) return;
+                setTeamCount((prev) => Math.max(0, (isNaN(prev) || prev === null ? 0 : prev) - 1));
+              }}
               style={{
                 width: "80%",
                 height: "60px",
                 fontSize: "18px",
                 cursor: "pointer",
-                userSelect: "none", // ← 텍스트 선택 비활성화!
+                userSelect: "none",
               }}>
               -1
             </button>
-          </td>
-        </tr>
-
-        <tr className="button-row">
-          <td colSpan={7}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}>
-              {/* 좌측: 채점 항목 */}
-              <span
-                style={{
-                  flex: "1",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  fontSize: "30px",
-                }}>
-                채점 항목 ({selectedCells}/{maxCount})
-              </span>
-
-              {/* 우측: 버튼 */}
-              {nextPlayerData.index !== null &&
-              (rh_cd === nextPlayerData.rh_cd || // 같은 라운드의 선수거나
-                nextPlayerData.rh_cd !== "899000") ? ( // 예선 1조에서 2조로 넘어가거나 (899000은 결승전)
-                <button
-                  onClick={handleMaxCheck.bind(null, nextPlayerData.link)}
-                  className="nav-button"
-                  style={{
-                    flex: "1",
-                    textAlign: "center",
-                    backgroundColor: isSaveFinal === true ? "green" : "gray",
-                    color: "white",
-                  }}>
-                  <div>다음 {parseInt(detail_class_cd) % 2 === 0 ? "팀" : "선수"}</div>
-                  {nextPlayerData.name} ({getRoundDescription(nextPlayerData.rh_cd)})
-                </button>
-              ) : (
-                <button
-                  className="nav-button"
-                  style={{
-                    flex: "1",
-                    textAlign: "center",
-                    backgroundColor: isSaveFinal === true ? "green" : "gray",
-                    color: "white",
-                  }}>
-                  <div>채점이 끝났습니다.</div>
-                  수고하셨습니다.
-                </button>
-              )}
-            </div>
           </td>
         </tr>
       </tbody>
